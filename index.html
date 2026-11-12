@@ -376,7 +376,7 @@
                   </div>
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Pertanyaan Soal</label>
-                    <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50"><div class="flex flex-wrap gap-0.5 p-1.5 border-b bg-white" onmousedown="event.preventDefault()"><button type="button" title="Tebal" onclick="fmt('bold')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-bold"></i></button><button type="button" title="Miring" onclick="fmt('italic')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-italic"></i></button><button type="button" title="Garis bawah" onclick="fmt('underline')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-underline"></i></button><button type="button" title="Rata kiri" onclick="fmt('justifyLeft')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-align-left"></i></button><button type="button" title="Tengah" onclick="fmt('justifyCenter')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-align-center"></i></button><button type="button" title="Rata kanan" onclick="fmt('justifyRight')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-align-right"></i></button><button type="button" title="Rata kanan-kiri" onclick="fmt('justifyFull')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-align-justify"></i></button><button type="button" title="Bullet" onclick="fmt('insertUnorderedList')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-list-ul"></i></button><button type="button" title="Numbering" onclick="fmt('insertOrderedList')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-list-ol"></i></button><button type="button" title="Sisipkan gambar" onclick="document.getElementById('quizImageInput').click()" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-image"></i></button></div><div id="quizQuestionEditor" contenteditable="true" data-placeholder="Tuliskan pertanyaan..." class="rich min-h-[90px] max-h-60 overflow-y-auto p-2.5 text-xs outline-none"></div></div><input type="file" id="quizImageInput" accept="image/*" class="hidden" onchange="insertQuizImage(this)">
+                    <div id="quizBox"></div>
                   </div>
                   <div class="space-y-1.5">
                     <input type="text" id="quizOptionA" required placeholder="Opsi A" class="w-full p-2 bg-slate-50 border rounded-xl text-xs">
@@ -459,7 +459,7 @@
         </div>
         <div>
           <h3 id="playerCourseTitle" class="text-xl font-extrabold text-slate-800"></h3>
-          <p id="playerCourseDesc" class="text-xs text-slate-600 mt-2"></p>
+          <div id="playerCourseDesc" class="rich text-xs text-slate-600 mt-2"></div>
           <div class="flex flex-wrap gap-2 mt-4"><a id="playerPdfLink" target="_blank" rel="noopener" class="hidden px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold"><i class="fa-solid fa-file-pdf mr-1"></i> Buka Modul PDF</a><button onclick="startCourseQuiz()" class="px-4 py-2 bg-amber-500 text-slate-900 rounded-xl text-xs font-extrabold"><i class="fa-solid fa-gamepad mr-1"></i> Mulai Quiz</button></div>
         </div>
       </div>
@@ -513,7 +513,7 @@
         </div>
         <div><label class="block text-xs font-bold text-slate-700 mb-1">Embed URL Video YouTube</label><input type="url" id="inputCourseYoutube" required placeholder="https://www.youtube.com/embed/XXXX" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
         <div><label class="block text-xs font-bold text-slate-700 mb-1">Link Modul PDF (opsional)</label><input type="url" id="inputCoursePdf" placeholder="https://..." class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
-        <div><label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi</label><textarea id="inputCourseDesc" rows="3" required class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></textarea></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi</label><div id="descBox"></div></div>
         <button id="courseSubmitBtn" type="submit" class="w-full py-3 bg-brand-600 text-white font-bold rounded-xl text-xs shadow-md">Posting Materi</button>
       </form>
     </div>
@@ -533,19 +533,18 @@
 
     // PASTE FIREBASE CONFIG ANDA DI SINI
     const firebaseConfig = {
-    apiKey: "AIzaSyAY2FONZxvNWzGDDP3X4AYLss2Cvy784KE",
+     apiKey: "AIzaSyAY2FONZxvNWzGDDP3X4AYLss2Cvy784KE",
     authDomain: "diajar-a1eeb.firebaseapp.com",
     projectId: "diajar-a1eeb",
     storageBucket: "diajar-a1eeb.firebasestorage.app",
     messagingSenderId: "346385828111",
     appId: "1:346385828111:web:3b7a180fbfa8d66033d67a"
-
     };
 
     let auth, db;
     if (!IS_PREVIEW) { const app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); }
 
-    const ALLOW = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'P', 'DIV', 'BR', 'UL', 'OL', 'LI', 'IMG', 'SPAN', 'FONT']), DROP = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'TEMPLATE', 'SVG', 'MATH']);
+    const ALLOW = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'P', 'DIV', 'BR', 'UL', 'OL', 'LI', 'IMG', 'SPAN', 'FONT', 'S', 'STRIKE']), DROP = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'TEMPLATE', 'SVG', 'MATH']);
     function sanitize(html) {
       const d = new DOMParser().parseFromString(`<body>${html || ''}</body>`, 'text/html');
       (function walk(n) {
@@ -553,15 +552,17 @@
           if (c.nodeType === 3) return;
           if (c.nodeType !== 1 || DROP.has(c.tagName.toUpperCase())) return c.remove();
           if (!ALLOW.has(c.tagName)) { walk(c); return c.replaceWith(...c.childNodes); }
-          const al = c.style?.textAlign, src = c.getAttribute('src');
+          const al = c.style?.textAlign, src = c.getAttribute('src'), sz = c.getAttribute('size'), col = c.getAttribute('color');
           [...c.attributes].forEach(a => c.removeAttribute(a.name));
           if (['left', 'center', 'right', 'justify'].includes(al)) c.style.textAlign = al;
+          if (c.tagName === 'FONT') { if (/^[1-7]$/.test(sz)) c.setAttribute('size', sz); if (/^#[0-9a-fA-F]{6}$/.test(col)) c.setAttribute('color', col); }
           if (c.tagName === 'IMG') { if (!/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(src || '')) return c.remove(); c.setAttribute('src', src); c.setAttribute('alt', 'gambar soal'); }
           walk(c);
         });
       })(d.body);
       return d.body.innerHTML;
     }
+    const plain = h => new DOMParser().parseFromString(sanitize(h), 'text/html').body.textContent.trim();
     const normWa = v => { let w = v.replace(/\D/g, ''); return w.startsWith('0') ? '62' + w.slice(1) : w; };
     const XP = { kelas: 10, duha: 15, dzuhur: 15 };
     const LABEL = { kelas: 'Kelas', duha: 'Sholat Duha', dzuhur: 'Sholat Dzuhur' };
@@ -686,7 +687,7 @@
               <span class="absolute top-3 left-3 px-3 py-1 bg-amber-400 text-slate-900 text-[10px] font-extrabold rounded-full"><i class="fa-solid fa-star mr-1"></i> ${esc(c.rating ?? '-')}</span></div>
             <div class="p-5"><h5 class="font-extrabold text-slate-800 text-base">${esc(c.title)}</h5>
               <p class="text-xs text-slate-400 mt-1">${esc(c.tutor)} • ${esc(c.category)}</p>
-              <p class="text-xs text-slate-500 mt-2 line-clamp-2">${esc(c.desc)}</p></div>
+              <p class="text-xs text-slate-500 mt-2 line-clamp-2">${esc(plain(c.desc))}</p></div>
           </div>
           <div class="px-5 pb-5 flex flex-col gap-2">
             <button onclick="handleGuestCourseClick('${esc(c.id)}')" class="w-full py-2 bg-brand-600 text-white rounded-xl text-xs font-bold shadow-sm">Buka Materi <i class="fa-solid fa-arrow-right ml-1"></i></button>
@@ -801,7 +802,7 @@
     window.openCoursePlayer = id => {
       const c = state.courses.find(x => x.id === id); if (!c) return;
       activeCourse = c;
-      $('playerModalTitle').textContent = 'Course Player'; $('playerCourseTitle').textContent = c.title; $('playerCourseDesc').textContent = c.desc;
+      $('playerModalTitle').textContent = 'Course Player'; $('playerCourseTitle').textContent = c.title; $('playerCourseDesc').innerHTML = sanitize(c.desc);
       $('youtubeIframe').src = okYoutube(c.youtubeUrl) ? c.youtubeUrl : '';
       const pdf = $('playerPdfLink'); if (c.pdfUrl && /^https?:\/\//.test(c.pdfUrl)) { pdf.href = c.pdfUrl; pdf.classList.remove('hidden'); } else pdf.classList.add('hidden');
       $('modalCoursePlayer').classList.remove('hidden');
@@ -940,7 +941,7 @@
       editingCourse = id; const c = id ? state.courses.find(x => x.id === id) : null;
       $('courseModalTitle').textContent = c ? 'Edit Materi' : 'Tambah Materi Baru'; $('courseSubmitBtn').textContent = c ? 'Simpan Perubahan' : 'Posting Materi';
       $('inputCourseTitle').value = c?.title || ''; $('inputCourseCategory').value = c?.category || 'Art'; $('inputCourseTutor').value = c?.tutor || '';
-      $('inputCourseYoutube').value = c?.youtubeUrl || ''; $('inputCoursePdf').value = c?.pdfUrl || ''; $('inputCourseDesc').value = c?.desc || '';
+      $('inputCourseYoutube').value = c?.youtubeUrl || ''; $('inputCoursePdf').value = c?.pdfUrl || ''; $('inputCourseDesc').innerHTML = sanitize(c?.desc || '');
       $('modalCreateCourse').classList.remove('hidden');
     };
     window.handleSaveCourse = async e => {
@@ -948,7 +949,9 @@
       const url = $('inputCourseYoutube').value.trim(), pdf = $('inputCoursePdf').value.trim();
       if (!okYoutube(url)) return alert('URL harus berformat https://www.youtube.com/embed/XXXX');
       if (pdf && !/^https?:\/\//.test(pdf)) return alert('Link PDF harus diawali http(s)://');
-      const f = { title: $('inputCourseTitle').value.trim(), category: $('inputCourseCategory').value, tutor: $('inputCourseTutor').value.trim(), youtubeUrl: url, pdfUrl: pdf, desc: $('inputCourseDesc').value.trim() };
+      const dEd = $('inputCourseDesc');
+      if (!dEd.textContent.trim() && !dEd.querySelector('img')) return alert('Deskripsi tidak boleh kosong.');
+      const f = { title: $('inputCourseTitle').value.trim(), category: $('inputCourseCategory').value, tutor: $('inputCourseTutor').value.trim(), youtubeUrl: url, pdfUrl: pdf, desc: sanitize(dEd.innerHTML) };
       const old = state.courses.find(c => c.id === editingCourse), c = old ? { ...old, ...f } : { id: `c-${Date.now()}`, rating: 5, isQuizPublic: false, quiz: [], ...f };
       try { await saveCourse(c); if (old) Object.assign(old, c); else state.courses.push(c); closeModalCreateCourse(); renderAdminView(); toast('Materi disimpan.'); } catch (err) { console.error(err); alert(err.message.startsWith('Ukuran') ? err.message : 'Gagal menyimpan materi.'); }
     };
@@ -958,15 +961,38 @@
     };
 
     // ===== CRUD QUIZ + EDITOR TEKS KAYA =====
-    window.fmt = cmd => { $('quizQuestionEditor').focus(); document.execCommand(cmd, false, null); };
+    const ranges = new WeakMap(), edOf = el => el.closest('[data-box]').querySelector('[contenteditable]');
+    document.addEventListener('selectionchange', () => {
+      const sel = getSelection(); if (!sel.rangeCount) return;
+      const n = sel.anchorNode, ed = (n?.nodeType === 1 ? n : n?.parentElement)?.closest?.('[contenteditable]');
+      if (ed) ranges.set(ed, sel.getRangeAt(0).cloneRange());
+    });
+    const restore = ed => { ed.focus(); const r = ranges.get(ed); if (r) { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); } };
+    const TB = (cmd, ic, t) => `<button type="button" title="${t}" onclick="fmt('${cmd}')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs flex-shrink-0"><i class="fa-solid ${ic}"></i></button>`;
+    function richBox(ed, img, ph, h) {
+      const sep = '<span class="w-px h-5 bg-slate-200 mx-1"></span>';
+      return `<div data-box class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50"><div class="flex flex-wrap items-center gap-0.5 p-1.5 border-b bg-white" onmousedown="if(!['SELECT','INPUT'].includes(event.target.tagName))event.preventDefault()">
+        ${TB('undo', 'fa-rotate-left', 'Urungkan')}${TB('redo', 'fa-rotate-right', 'Ulangi')}${sep}
+        <select onchange="fmtSize(this)" title="Ukuran huruf" class="h-8 text-[11px] border rounded-lg bg-white px-1"><option value="">Ukuran</option><option value="1">Sangat Kecil</option><option value="2">Kecil</option><option value="3">Normal</option><option value="5">Besar</option><option value="6">Sangat Besar</option></select>
+        <input type="color" value="#0f172a" title="Warna teks" onchange="fmtColor(this)" class="w-8 h-8 p-0.5 border rounded-lg bg-white cursor-pointer">${sep}
+        ${TB('bold', 'fa-bold', 'Tebal')}${TB('italic', 'fa-italic', 'Miring')}${TB('underline', 'fa-underline', 'Garis bawah')}${TB('strikeThrough', 'fa-strikethrough', 'Coret')}${sep}
+        ${TB('justifyLeft', 'fa-align-left', 'Rata kiri')}${TB('justifyCenter', 'fa-align-center', 'Tengah')}${TB('justifyRight', 'fa-align-right', 'Rata kanan')}${TB('justifyFull', 'fa-align-justify', 'Rata kanan-kiri')}${sep}
+        ${TB('insertUnorderedList', 'fa-list-ul', 'Bullet')}${TB('insertOrderedList', 'fa-list-ol', 'Numbering')}${sep}
+        <button type="button" title="Sisipkan gambar" onclick="document.getElementById('${img}').click()" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-image"></i></button>${TB('removeFormat', 'fa-eraser', 'Hapus format')}
+      </div><div id="${ed}" contenteditable="true" data-placeholder="${ph}" class="rich ${h} overflow-y-auto p-2.5 text-xs outline-none"></div></div>
+      <input type="file" id="${img}" data-for="${ed}" accept="image/*" class="hidden" onchange="insertImageInto(this)">`;
+    }
+    window.fmt = cmd => { const ed = edOf(event.target); restore(ed); document.execCommand(cmd, false, null); };
+    window.fmtSize = sel => { if (!sel.value) return; const ed = edOf(sel); restore(ed); document.execCommand('fontSize', false, sel.value); sel.value = ''; };
+    window.fmtColor = inp => { const ed = edOf(inp); restore(ed); document.execCommand('foreColor', false, inp.value); };
     const compressImg = (file, max = 480, q = 0.65) => new Promise((res, rej) => {
       const r = new FileReader();
       r.onload = () => { const i = new Image(); i.onload = () => { const k = Math.min(1, max / i.width), c = document.createElement('canvas'); c.width = Math.round(i.width * k); c.height = Math.round(i.height * k); c.getContext('2d').drawImage(i, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', q)); }; i.onerror = rej; i.src = r.result; };
       r.onerror = rej; r.readAsDataURL(file);
     });
-    window.insertQuizImage = async inp => {
-      const f = inp.files[0]; inp.value = ''; if (!f || !f.type.startsWith('image/')) return;
-      try { const url = await compressImg(f); $('quizQuestionEditor').focus(); document.execCommand('insertImage', false, url); } catch (e) { alert('Gambar tidak dapat dibaca.'); }
+    window.insertImageInto = async inp => {
+      const f = inp.files[0], ed = $(inp.dataset.for); inp.value = ''; if (!f || !f.type.startsWith('image/')) return;
+      try { const url = await compressImg(f); restore(ed); document.execCommand('insertImage', false, url); } catch (e) { alert('Gambar tidak dapat dibaca.'); }
     };
     function renderAdminQuizBank() {
       const sel = $('quizTargetCourseSelect'), keep = sel.value;
@@ -1064,6 +1090,8 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      $('descBox').innerHTML = richBox('inputCourseDesc', 'descImageInput', 'Tuliskan deskripsi materi...', 'min-h-[110px] max-h-56');
+      $('quizBox').innerHTML = richBox('quizQuestionEditor', 'quizImageInput', 'Tuliskan pertanyaan...', 'min-h-[90px] max-h-60');
       if (IS_PREVIEW) {
         const b = $('previewBanner'); b.classList.remove('hidden'); b.classList.add('flex');
         $('formLoginAdmin').insertAdjacentHTML('afterend', `<p class="mt-4 text-[11px] text-slate-500 bg-amber-50 border border-amber-100 rounded-xl p-3">Akun demo — Siswa: <b>2024001</b> / <b>siswa123</b> · Admin: <b>guru@demo.com</b> / <b>admin123</b></p>`);
