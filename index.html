@@ -76,6 +76,10 @@
     .rich ul{list-style:disc;padding-left:1.25rem}.rich ol{list-style:decimal;padding-left:1.25rem}
     .rich:empty:before{content:attr(data-placeholder);color:#94a3b8}
     #mobileNav{padding-bottom:env(safe-area-inset-bottom,0px)}
+      #printArea{display:none}
+    @media print{body>*:not(#printArea){display:none!important}#printArea{display:grid!important;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px}
+      .qr-card{border:1px dashed #94a3b8;border-radius:10px;padding:8px;text-align:center;font-family:sans-serif;break-inside:avoid;font-size:10px}
+      .qr-card .qr{display:flex;justify-content:center;margin:6px 0}.qr-card .nm{font-weight:700;font-size:12px}.qr-card .sm{color:#475569}}
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
@@ -274,33 +278,10 @@
             <div id="studentCourseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft flex flex-col items-center text-center">
-              <span class="px-3 py-1 bg-brand-50 text-brand-600 rounded-full text-[11px] font-bold mb-3">QR Presensi Anda</span>
-              <div id="studentQrCanvas" class="p-3 bg-white border-2 border-slate-100 rounded-2xl shadow-inner mb-3"></div>
-              <h5 id="studentQrName" class="font-bold text-slate-800 text-sm">John Doe</h5>
-              <p id="studentQrClass" class="text-xs text-slate-500">Kelas 10 IPA 1</p>
-            </div>
-
-            <div class="lg:col-span-2 bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
-              <h4 class="font-bold text-slate-800 text-base mb-4">Jurnal Pembiasaan Ibadah</h4>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex items-center justify-between">
-                  <div>
-                    <h5 class="font-bold text-slate-800 text-sm">Sholat Duha</h5>
-                    <span id="statusDuha" class="text-[11px] text-amber-600 font-semibold">Belum Absen</span>
-                  </div>
-                  <button onclick="markIbadahMandiri('duha')" class="px-3 py-1.5 bg-amber-500 text-white rounded-xl text-xs font-bold">Klaim XP</button>
-                </div>
-                <div class="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex items-center justify-between">
-                  <div>
-                    <h5 class="font-bold text-slate-800 text-sm">Sholat Dzuhur</h5>
-                    <span id="statusDzuhur" class="text-[11px] text-amber-600 font-semibold">Belum Absen</span>
-                  </div>
-                  <button onclick="markIbadahMandiri('dzuhur')" class="px-3 py-1.5 bg-brand-600 text-white rounded-xl text-xs font-bold">Klaim XP</button>
-                </div>
-              </div>
-            </div>
+          <div id="journalCard" class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
+            <h4 class="font-bold text-slate-800 text-base">Status Presensi Hari Ini</h4>
+            <p class="text-xs text-slate-400 mt-1 mb-4">Presensi dicatat oleh guru / ustadz. Poin XP bertambah otomatis untuk setiap kehadiran.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4"><div class="p-4 rounded-2xl border border-slate-100 bg-slate-50"><h5 class="font-bold text-slate-800 text-sm">Kehadiran Kelas</h5><span id="statusKelas" class="text-[11px] text-slate-400 font-semibold">Belum dicatat</span></div><div class="p-4 rounded-2xl border border-slate-100 bg-slate-50"><h5 class="font-bold text-slate-800 text-sm">Sholat Duha</h5><span id="statusDuha" class="text-[11px] text-slate-400 font-semibold">Belum dicatat</span></div><div class="p-4 rounded-2xl border border-slate-100 bg-slate-50"><h5 class="font-bold text-slate-800 text-sm">Sholat Dzuhur</h5><span id="statusDzuhur" class="text-[11px] text-slate-400 font-semibold">Belum dicatat</span></div></div>
           </div>
         </section>
 
@@ -355,8 +336,16 @@
           <div id="adminTabVerifikasi" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft space-y-4"><h4 class="font-bold text-slate-800 text-base">Persetujuan Pendaftaran Siswa Baru</h4>
               <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50"><tr><th class="p-3">NISN</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Sekolah</th><th class="p-3">Aksi</th></tr></thead><tbody id="verifikasiTableBody"></tbody></table></div></div>
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft space-y-4"><div class="flex flex-wrap gap-2 justify-between items-center"><h4 class="font-bold text-slate-800 text-base">Data Siswa Terverifikasi</h4><button onclick="openStudentForm()" class="px-3 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">+ Tambah Siswa</button></div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft space-y-4"><div class="flex flex-wrap gap-2 justify-between items-center"><h4 class="font-bold text-slate-800 text-base">Data Siswa Terverifikasi</h4><div class="flex flex-wrap gap-2"><select id="printClassSelect" class="p-2 border rounded-xl text-xs bg-slate-50"></select><button onclick="printCards()" class="px-3 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold"><i class="fa-solid fa-print mr-1"></i> Cetak Kartu QR</button><button onclick="openStudentForm()" class="px-3 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">+ Tambah Siswa</button></div></div>
               <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50"><tr><th class="p-3">NISN</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Sekolah</th><th class="p-3">No. WA</th><th class="p-3">Aksi</th></tr></thead><tbody id="studentTableBody"></tbody></table></div></div>
+          </div>
+
+          <div id="adminTabMassal" class="hidden bg-white p-6 rounded-3xl border border-slate-100 shadow-soft space-y-4">
+            <div><h4 class="font-bold text-slate-800 text-base">Absen Massal per Kelas / Asrama</h4><p class="text-xs text-slate-400 mt-1">Pilih kelas, tanggal, dan kegiatan, lalu isi status tiap siswa. Siswa yang sudah tercatat otomatis terisi.</p></div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3"><select id="massalClass" onchange="renderMassal()" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></select><input type="date" id="massalDate" onchange="renderMassal()" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none">
+              <select id="massalType" onchange="renderMassal()" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"><option value="kelas">Kehadiran Kelas</option><option value="duha">Sholat Duha</option><option value="dzuhur">Sholat Dzuhur</option></select></div>
+            <div class="flex flex-wrap gap-2"><button onclick="massalSetAll('hadir')" class="px-3 py-2 bg-emerald-50 text-emerald-700 rounded-xl text-xs font-bold">Tandai Semua Hadir</button><button onclick="massalSetAll('')" class="px-3 py-2 bg-slate-100 text-slate-700 rounded-xl text-xs font-bold">Kosongkan</button><button id="massalSaveBtn" onclick="saveMassal()" class="px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold ml-auto"><i class="fa-solid fa-floppy-disk mr-1"></i> Simpan Absensi</button></div>
+            <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50"><tr><th class="p-3">Siswa</th><th class="p-3">Status</th></tr></thead><tbody id="massalTableBody"></tbody></table></div>
           </div>
 
           <!-- SUB-TAB MATERI -->
@@ -439,8 +428,6 @@
       <div class="grid grid-cols-2 gap-3">
         <button onclick="closeMobileMoreMenu(); navigateTo('siswa');" class="p-4 bg-brand-50 border border-brand-100 rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-graduation-cap text-brand-600 text-lg"></i><span class="text-xs font-bold text-brand-700">Dashboard Saya</span></button>
         <button onclick="closeMobileMoreMenu(); navigateTo('landing');" class="p-4 bg-slate-50 border rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-globe text-brand-600 text-lg"></i><span class="text-xs font-bold">Halaman Utama</span></button>
-        <button onclick="closeMobileMoreMenu(); markIbadahMandiri('duha');" class="p-4 bg-slate-50 border rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-sun text-amber-500 text-lg"></i><span class="text-xs font-bold">Absen Duha</span></button>
-        <button onclick="closeMobileMoreMenu(); markIbadahMandiri('dzuhur');" class="p-4 bg-slate-50 border rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-cloud-sun text-blue-500 text-lg"></i><span class="text-xs font-bold">Absen Dzuhur</span></button>
         <button onclick="closeMobileMoreMenu(); handleLogout();" class="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-right-from-bracket text-rose-600 text-lg"></i><span class="text-xs font-bold text-rose-700">Keluar</span></button>
       </div>
     </div>
@@ -586,7 +573,7 @@
       const b = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: enc.encode(salt), iterations: 150000, hash: 'SHA-256' }, k, 256);
       return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
     };
-    const xpOf = nisn => state.attendances.filter(a => a.studentId === nisn).reduce((t, a) => t + (XP[a.type] || 0), 0);
+    const xpOf = nisn => state.attendances.filter(a => a.studentId === nisn && (a.status || 'hadir') === 'hadir').reduce((t, a) => t + (XP[a.type] || 0), 0);
     const levelOf = xp => Math.floor(xp / 100) + 1;
 
     // ===== DATA DUMMY: HANYA UNTUK PREVIEW (maks 2 per koleksi) =====
@@ -635,7 +622,7 @@
     async function addAttendance(s, type) {
       const date = dateStr(), id = `${date}_${s.nisn}_${type}`;
       if (state.attendances.some(a => a.id === id)) return false;
-      const rec = { studentId: s.nisn, studentName: s.name, type, date, time: timeStr(), waSent: false };
+      const rec = { studentId: s.nisn, studentName: s.name, type, date, time: timeStr(), status: 'hadir', waSent: false };
       if (!IS_PREVIEW) {
         if ((await getDoc(doc(db, 'attendances', id))).exists()) return false;
         await setDoc(doc(db, 'attendances', id), { ...rec, createdAt: serverTimestamp() });
@@ -666,7 +653,7 @@
     window.handleGlobalSearch = v => { state.search = v.toLowerCase().trim(); renderLandingCourseGrid(); if (state.currentUser?.role === 'siswa') renderSiswaView(); };
     const filtered = () => state.courses.filter(c => !state.search || `${c.title} ${c.tutor} ${c.category}`.toLowerCase().includes(state.search));
 
-    const adminSubNav = () => [['scanner', 'fa-qrcode', 'Scanner Presensi'], ['verifikasi', 'fa-user-check', 'Data Siswa'], ['materi', 'fa-folder-open', 'Kelola Materi'], ['quiz', 'fa-gamepad', 'Kelola Quiz & Soal'], ['laporan', 'fa-file-invoice', 'Rekap Laporan']].map(([t, ic, lb]) => {
+    const adminSubNav = () => [['scanner', 'fa-qrcode', 'Scanner Presensi'], ['massal', 'fa-clipboard-user', 'Absen Massal'], ['verifikasi', 'fa-user-check', 'Data Siswa'], ['materi', 'fa-folder-open', 'Kelola Materi'], ['quiz', 'fa-gamepad', 'Kelola Quiz & Soal'], ['laporan', 'fa-file-invoice', 'Rekap Laporan']].map(([t, ic, lb]) => {
       const on = curPage === 'admin' && adminTab === t, pend = t === 'verifikasi' ? state.students.filter(x => !x.verified).length : 0;
       return `<button onclick="goAdmin('${t}')" class="w-full text-left pl-9 pr-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-3 ${on ? 'bg-brand-50 text-brand-600' : 'text-slate-600 hover:bg-slate-100'}"><i class="fa-solid ${ic} w-4 text-center"></i><span class="flex-1">${lb}</span>${pend ? `<span class="px-1.5 py-0.5 bg-rose-500 text-white rounded-full text-[10px]">${pend}</span>` : ''}</button>`;
     }).join('');
@@ -786,9 +773,6 @@
     function renderSiswaView() {
       const u = state.currentUser, xp = xpOf(u.nisn), lv = levelOf(xp);
       $('studentNameGreeting').textContent = u.name; $('studentLevelText').textContent = `Lvl ${lv}`; $('studentXpText').textContent = `${xp} XP`;
-      $('studentQrName').textContent = u.name; $('studentQrClass').textContent = `Kelas ${u.class}`;
-      const qr = $('studentQrCanvas'); qr.innerHTML = '';
-      if (window.QRCode) new QRCode(qr, { text: u.nisn, width: 140, height: 140 });
       const list = filtered();
       $('studentCourseGrid').innerHTML = list.length ? list.map(c => `
         <div class="bg-white rounded-3xl border border-slate-100 shadow-card overflow-hidden flex flex-col justify-between">
@@ -796,20 +780,14 @@
           <div class="p-5 pt-0"><button onclick="openCoursePlayer('${esc(c.id)}')" class="w-full py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">Buka Modul</button></div>
         </div>`).join('') : `<p class="col-span-full text-sm text-slate-400">Belum ada materi.</p>`;
       const today = dateStr();
-      [['duha', 'statusDuha'], ['dzuhur', 'statusDzuhur']].forEach(([t, id]) => {
-        const done = state.attendances.some(a => a.studentId === u.nisn && a.type === t && a.date === today);
-        const el = $(id); el.textContent = done ? 'Sudah Absen ✓' : 'Belum Absen'; el.className = `text-[11px] font-semibold ${done ? 'text-emerald-600' : 'text-amber-600'}`;
+      const SL = { hadir: ['Hadir ✓', 'text-emerald-600'], izin: ['Izin', 'text-blue-600'], sakit: ['Sakit', 'text-amber-600'], alpa: ['Alpa', 'text-rose-600'] };
+      [['kelas', 'statusKelas'], ['duha', 'statusDuha'], ['dzuhur', 'statusDzuhur']].forEach(([t, id]) => {
+        const r = state.attendances.find(a => a.studentId === u.nisn && a.type === t && a.date === today), [txt, cls] = r ? SL[r.status || 'hadir'] : ['Belum dicatat', 'text-slate-400'];
+        const el = $(id); el.textContent = txt; el.className = `text-[11px] font-semibold ${cls}`;
       });
     }
-    window.markIbadahMandiri = async type => {
-      const u = state.currentUser; if (u?.role !== 'siswa') return;
-      try {
-        if (await addAttendance(u, type)) { toast(`+${XP[type]} XP! ${LABEL[type]} tercatat.`); renderSiswaView(); }
-        else toast('Anda sudah absen hari ini.');
-      } catch (err) { console.error(err); alert('Gagal menyimpan presensi.'); }
-    };
     window.openModalMateriList = async () => { if (curPage !== 'siswa') await navigateTo('siswa'); $('studentCourseGrid').scrollIntoView({ behavior: 'smooth' }); };
-    window.openModalQrSiswa = async () => { if (curPage !== 'siswa') await navigateTo('siswa'); $('studentQrCanvas').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+    window.openStatusPresensi = async () => { if (curPage !== 'siswa') await navigateTo('siswa'); $('journalCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
 
     window.openCoursePlayer = id => {
       const c = state.courses.find(x => x.id === id); if (!c) return;
@@ -845,12 +823,12 @@
     function renderAdminView() { renderCategories(); renderScannerTable(); renderVerifikasi(); renderAdminCourses(); renderAdminQuizBank(); renderReport(); }
 
     window.switchAdminTab = tab => {
-      ['scanner', 'verifikasi', 'materi', 'quiz', 'laporan'].forEach(t => {
+      ['scanner', 'massal', 'verifikasi', 'materi', 'quiz', 'laporan'].forEach(t => {
         const N = t.charAt(0).toUpperCase() + t.slice(1);
         $(`adminTab${N}`)?.classList.toggle('hidden', t !== tab);
         const b = $(`adminTab${N}Btn`); if (b) b.className = `px-4 py-2.5 rounded-xl ${t === tab ? 'bg-brand-600 text-white' : 'text-slate-600'}`;
       });
-      adminTab = tab; renderNavigationUI();
+      adminTab = tab; renderNavigationUI(); if (tab === 'massal') renderMassal();
       if (tab === 'scanner') startScanner(); else stopScanner();
     };
 
@@ -877,7 +855,7 @@
 
     function renderScannerTable() {
       const rows = state.attendances.filter(a => a.date === dateStr()).sort((a, b) => b.time.localeCompare(a.time));
-      $('attendanceTableBody').innerHTML = rows.length ? rows.map(a => `<tr class="border-t"><td class="p-3 font-semibold">${esc(a.studentName)}</td><td class="p-3">${esc(LABEL[a.type] || a.type)}</td><td class="p-3">${esc(a.time)}</td>
+      $('attendanceTableBody').innerHTML = rows.length ? rows.map(a => `<tr class="border-t"><td class="p-3 font-semibold">${esc(a.studentName)}</td><td class="p-3">${esc(LABEL[a.type] || a.type)}${a.status && a.status !== 'hadir' ? ` <span class="text-[10px] font-bold text-amber-600 uppercase">(${esc(a.status)})</span>` : ''}</td><td class="p-3">${esc(a.time)}</td>
         <td class="p-3">${a.waSent ? '<span class="text-emerald-600 font-bold">Terkirim</span>' : '<span class="text-slate-400">Belum</span>'}</td>
         <td class="p-3 text-center whitespace-nowrap"><button onclick="sendWA('${esc(a.id)}')" class="px-2.5 py-1 bg-emerald-500 text-white rounded-lg"><i class="fa-brands fa-whatsapp"></i></button> <button onclick="deleteAttendance('${esc(a.id)}')" class="px-2.5 py-1 bg-rose-100 text-rose-600 rounded-lg"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('') : empty('Belum ada presensi hari ini.', 5);
     }
@@ -897,7 +875,7 @@
     // ===== CRUD SISWA =====
     function renderVerifikasi() {
       const p = state.students.filter(s => !s.verified), v = state.students.filter(s => s.verified);
-      $('pendingBadgeCount').textContent = p.length; renderNavigationUI();
+      $('pendingBadgeCount').textContent = p.length; renderNavigationUI(); fillPrintClasses();
       $('verifikasiTableBody').innerHTML = p.length ? p.map(s => `<tr class="border-t"><td class="p-3">${esc(s.nisn)}</td><td class="p-3 font-semibold">${esc(s.name)}</td><td class="p-3">${esc(s.class)}</td><td class="p-3">${esc(s.sekolah)}</td>
         <td class="p-3 flex gap-2"><button onclick="verifySiswa('${esc(s.nisn)}',true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold">Setujui</button><button onclick="deleteStudent('${esc(s.nisn)}')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold">Tolak</button></td></tr>`).join('') : empty('Tidak ada pendaftaran menunggu.', 5);
       $('studentTableBody').innerHTML = v.length ? v.map(s => `<tr class="border-t"><td class="p-3">${esc(s.nisn)}</td><td class="p-3 font-semibold">${esc(s.name)}</td><td class="p-3">${esc(s.class)}</td><td class="p-3">${esc(s.sekolah)}</td><td class="p-3">${esc(s.wa)}</td>
@@ -940,6 +918,53 @@
     window.deleteAttendance = async id => {
       if (!confirm('Hapus catatan presensi ini?')) return;
       try { if (!IS_PREVIEW) await deleteDoc(doc(db, 'attendances', id)); state.attendances = state.attendances.filter(a => a.id !== id); renderScannerTable(); renderReport(); } catch (e) { console.error(e); alert('Gagal menghapus.'); }
+    };
+
+    // ===== KARTU QR & ABSEN MASSAL =====
+    const classesOf = () => [...new Set(state.students.filter(x => x.verified).map(x => x.class))].sort();
+    function fillPrintClasses() {
+      const el = $('printClassSelect'), keep = el.value;
+      el.innerHTML = '<option value="">Semua Kelas</option>' + classesOf().map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join(''); el.value = keep;
+    }
+    window.printCards = () => {
+      const k = $('printClassSelect').value, list = state.students.filter(x => x.verified && (!k || x.class === k));
+      if (!list.length) return alert('Tidak ada siswa untuk dicetak.');
+      if (!window.QRCode) return alert('Library QR belum termuat. Periksa koneksi internet.');
+      let pa = $('printArea'); if (!pa) { pa = document.createElement('div'); pa.id = 'printArea'; document.body.appendChild(pa); }
+      pa.innerHTML = list.map(x => `<div class="qr-card"><b>${esc(x.sekolah || 'DiAjar')}</b><div class="qr" data-n="${esc(x.nisn)}"></div><div class="nm">${esc(x.name)}</div><div class="sm">${esc(x.class)} • ${esc(x.nisn)}</div></div>`).join('');
+      pa.querySelectorAll('.qr').forEach(d => new QRCode(d, { text: d.dataset.n, width: 96, height: 96 }));
+      setTimeout(() => window.print(), 300);
+    };
+    window.addEventListener('afterprint', () => { const pa = $('printArea'); if (pa) pa.innerHTML = ''; });
+
+    const STAT = { hadir: 'Hadir', izin: 'Izin', sakit: 'Sakit', alpa: 'Alpa' };
+    window.renderMassal = () => {
+      const cls = classesOf(), sel = $('massalClass'), keep = sel.value;
+      sel.innerHTML = cls.length ? cls.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('') : '<option value="">(Belum ada kelas)</option>';
+      if (keep && cls.includes(keep)) sel.value = keep;
+      if (!$('massalDate').value) $('massalDate').value = dateStr();
+      const date = $('massalDate').value, type = $('massalType').value;
+      const list = state.students.filter(x => x.verified && x.class === sel.value).sort((a, b) => a.name.localeCompare(b.name));
+      $('massalTableBody').innerHTML = list.length ? list.map(x => {
+        const rec = state.attendances.find(a => a.id === `${date}_${x.nisn}_${type}`), cur = rec ? (rec.status || 'hadir') : '';
+        return `<tr class="border-t"><td class="p-3 font-semibold">${esc(x.name)}<div class="text-[10px] text-slate-400 font-normal">${esc(x.nisn)}</div></td><td class="p-3"><select data-nisn="${esc(x.nisn)}" class="massal-sel p-2 border rounded-lg bg-slate-50"><option value="">—</option>${Object.entries(STAT).map(([k, v]) => `<option value="${k}"${cur === k ? ' selected' : ''}>${v}</option>`).join('')}</select></td></tr>`;
+      }).join('') : empty('Tidak ada siswa di kelas ini.', 2);
+    };
+    window.massalSetAll = v => document.querySelectorAll('.massal-sel').forEach(el => { el.value = v; });
+    window.saveMassal = async () => {
+      const date = $('massalDate').value, type = $('massalType').value; if (!date) return alert('Pilih tanggal terlebih dahulu.');
+      const btn = $('massalSaveBtn'); btn.disabled = true;
+      try {
+        const jobs = []; let n = 0;
+        document.querySelectorAll('.massal-sel').forEach(sl => {
+          const st = sl.value; if (!st) return;
+          const x = state.students.find(v => v.nisn === sl.dataset.nisn), id = `${date}_${x.nisn}_${type}`, ex = state.attendances.find(a => a.id === id);
+          if (ex) { if ((ex.status || 'hadir') === st) return; jobs.push((async () => { if (!IS_PREVIEW) await updateDoc(doc(db, 'attendances', id), { status: st }); ex.status = st; })()); }
+          else { const rec = { studentId: x.nisn, studentName: x.name, type, date, time: timeStr(), status: st, waSent: false }; jobs.push((async () => { if (!IS_PREVIEW) await setDoc(doc(db, 'attendances', id), { ...rec, createdAt: serverTimestamp() }); state.attendances.push({ id, ...rec }); })()); }
+          n++;
+        });
+        await Promise.all(jobs); renderScannerTable(); renderReport(); renderMassal(); toast(n ? `${n} data absensi disimpan.` : 'Tidak ada perubahan.');
+      } catch (e) { console.error(e); alert('Sebagian data gagal disimpan. Coba lagi.'); } finally { btn.disabled = false; }
     };
 
     // ===== CRUD KATEGORI =====
@@ -1094,7 +1119,7 @@
       try { await saveCourse(c); resetQuizForm(); renderAdminView(); } catch (e) { c.quiz.splice(idx, 0, removed); console.error(e); alert('Gagal menghapus soal.'); }
     };
 
-    const reportRows = () => state.students.filter(s => s.verified).map(s => ({ NIS: s.nisn, 'Nama Siswa': s.name, Kelas: s.class, Presensi: state.attendances.filter(a => a.studentId === s.nisn).length, 'XP Poin': xpOf(s.nisn) }));
+    const reportRows = () => state.students.filter(s => s.verified).map(s => ({ NIS: s.nisn, 'Nama Siswa': s.name, Kelas: s.class, Presensi: state.attendances.filter(a => a.studentId === s.nisn && (a.status || 'hadir') === 'hadir').length, 'XP Poin': xpOf(s.nisn) }));
     function renderReport() {
       const r = reportRows();
       $('reportTableBody').innerHTML = r.length ? r.map(x => `<tr class="border-t"><td class="p-3">${esc(x.NIS)}</td><td class="p-3 font-semibold">${esc(x['Nama Siswa'])}</td><td class="p-3">${esc(x.Kelas)}</td><td class="p-3">${x.Presensi}</td><td class="p-3 font-bold text-amber-600">${x['XP Poin']}</td></tr>`).join('') : empty('Belum ada data siswa terverifikasi.', 5);
@@ -1129,8 +1154,8 @@
       const u = state.currentUser; if (!u) return;
       const card = (ic, lb, fn) => `<button onclick="closeMobileSheet();${fn}" class="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center gap-2 text-center active:bg-brand-50"><i class="fa-solid ${ic} text-brand-600 text-lg"></i><span class="text-xs font-bold text-slate-700">${lb}</span></button>`;
       const items = u.role === 'siswa'
-        ? [['fa-graduation-cap', 'Dashboard Saya', "navigateTo('siswa')"], ['fa-book-bookmark', 'Materi', 'openModalMateriList()'], ['fa-qrcode', 'QR Presensi', 'openModalQrSiswa()'], ['fa-person-praying', 'Absen Sholat Duha', "markIbadahMandiri('duha')"], ['fa-mosque', 'Absen Sholat Dzuhur', "markIbadahMandiri('dzuhur')"]]
-        : [['fa-qrcode', 'Scan Presensi', "goAdmin('scanner')"], ['fa-user-check', 'Data Siswa', "goAdmin('verifikasi')"], ['fa-folder-open', 'Materi', "goAdmin('materi')"], ['fa-gamepad', 'Bank Soal Quiz', "goAdmin('quiz')"], ['fa-file-invoice', 'Laporan', "goAdmin('laporan')"]];
+        ? [['fa-graduation-cap', 'Dashboard Saya', "navigateTo('siswa')"], ['fa-book-bookmark', 'Materi', 'openModalMateriList()'], ['fa-clipboard-check', 'Status Presensi', 'openStatusPresensi()']]
+        : [['fa-qrcode', 'Scan Presensi', "goAdmin('scanner')"], ['fa-clipboard-user', 'Absen Massal', "goAdmin('massal')"], ['fa-user-check', 'Data Siswa', "goAdmin('verifikasi')"], ['fa-folder-open', 'Materi', "goAdmin('materi')"], ['fa-gamepad', 'Bank Soal Quiz', "goAdmin('quiz')"], ['fa-file-invoice', 'Laporan', "goAdmin('laporan')"]];
       openSheet('Menu', `<div class="grid grid-cols-2 gap-3">${items.map(i => card(...i)).join('')}</div>`);
     };
     window.openMobileProfile = () => {
