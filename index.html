@@ -6,10 +6,10 @@
   <title>DiAjar - Modern E-Learning & Presensi Digital</title>
   
   <!-- PWA Manifest Data URI -->
-  <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkRpQWphciBFLUxlYXJuaW5nIiwKICAic2hvcnRfbmFtZSI6ICJEaUFqYXIiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2Y4ZmFmYyIsCiAgInRoZW1lX2NvbG9yIjogIiMxZDQwZDYiLAogICJpY29ucyI6IFsgewogICAgInNyYyI6ICJodHRwczovL3BsYWNlaG9sZC5jby8xOTJ4MTkyLzFkNDBkNi9mZmZmZmY/dGV4dD1EaUFqYXIiLAogICAgInNpemVzIjogIjE5MngxOTIiLAogICAgInR5cGUiOiAiaW1hZ2UvcG5nIgogIH0gXQp9">
+  <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkRpQWphciBFLUxlYXJuaW5nIiwgInNob3J0X25hbWUiOiAiRGlBamFyIiwgInN0YXJ0X3VybCI6ICIuLyIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLCAiYmFja2dyb3VuZF9jb2xvciI6ICIjZjhmYWZjIiwgInRoZW1lX2NvbG9yIjogIiMxZDQwZDYiLCAiaWNvbnMiOiBbeyJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhacFpYZENiM2c5SWpBZ01DQTFNVElnTlRFeUlqNDhjbVZqZENCM2FXUjBhRDBpTlRFeUlpQm9aV2xuYUhROUlqVXhNaUlnY25nOUlqRXhNQ0lnWm1sc2JEMGlJekZrTkRCa05pSXZQangwWlhoMElIZzlJakkxTmlJZ2VUMGlNelV3SWlCbWIyNTBMWE5wZW1VOUlqTXdNQ0lnWm05dWRDMW1ZVzFwYkhrOUlrRnlhV0ZzSWlCbWIyNTBMWGRsYVdkb2REMGlOekF3SWlCbWFXeHNQU0lqWm1abUlpQjBaWGgwTFdGdVkyaHZjajBpYldsa1pHeGxJajVFUEM5MFpYaDBQand2YzNablBnPT0iLCAic2l6ZXMiOiAiYW55IiwgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsICJwdXJwb3NlIjogImFueSJ9XX0=">
   
   <!-- Tailwind CSS & FontAwesome Icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
   <!-- HTML5 QR Code Scanner & QRCode JS Generator -->
-  <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <script>
@@ -141,7 +141,7 @@
                 <button onclick="navigateTo('login')" class="px-6 py-3 bg-white text-brand-600 hover:bg-slate-50 font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
                   Let's Get Started <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
                 </button>
-                <button onclick="quickDemoLogin('siswa')" class="px-5 py-3 bg-brand-700/60 hover:bg-brand-700 backdrop-blur-md text-white font-semibold rounded-2xl transition-all border border-white/20">
+                <button id="demoBtn" onclick="quickDemoLogin('siswa')" class="px-5 py-3 bg-brand-700/60 hover:bg-brand-700 backdrop-blur-md text-white font-semibold rounded-2xl transition-all border border-white/20">
                   <i class="fa-solid fa-user-graduate mr-2"></i> Coba Demo Siswa
                 </button>
               </div>
@@ -311,7 +311,7 @@
 
           <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-soft flex flex-wrap gap-2 text-xs font-bold">
             <button onclick="switchAdminTab('scanner')" id="adminTabScannerBtn" class="px-4 py-2.5 rounded-xl bg-brand-600 text-white"><i class="fa-solid fa-qrcode mr-1"></i> Scanner Presensi</button>
-            <button onclick="switchAdminTab('verifikasi')" id="adminTabVerifikasiBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-user-check mr-1"></i> Verifikasi Siswa <span id="pendingBadgeCount" class="px-1.5 py-0.5 bg-rose-500 text-white rounded-full text-[10px]">1</span></button>
+            <button onclick="switchAdminTab('verifikasi')" id="adminTabVerifikasiBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-user-check mr-1"></i> Verifikasi Siswa <span id="pendingBadgeCount" class="px-1.5 py-0.5 bg-rose-500 text-white rounded-full text-[10px]">0</span></button>
             <button onclick="switchAdminTab('materi')" id="adminTabMateriBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-folder-open mr-1"></i> Kelola Materi</button>
             <button onclick="switchAdminTab('quiz')" id="adminTabQuizBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-gamepad mr-1"></i> Kelola Quiz & Soal</button>
             <button onclick="switchAdminTab('laporan')" id="adminTabLaporanBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-file-invoice mr-1"></i> Rekap Laporan</button>
@@ -426,7 +426,7 @@
     </main>
 
     <!-- SMARTPHONE BOTTOM NAV -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-100 px-3 py-2 flex items-center justify-around z-40">
+    <nav id="mobileNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-100 px-3 py-2 flex items-center justify-around z-40">
       <button onclick="navigateTo('siswa')" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] font-semibold">Home</span></button>
       <button onclick="openModalMateriList()" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-book-bookmark text-lg"></i><span class="text-[10px] font-semibold">Materi</span></button>
       <button onclick="openModalQrSiswa()" class="flex flex-col items-center gap-1 text-slate-400">
@@ -467,6 +467,7 @@
         <div>
           <h3 id="playerCourseTitle" class="text-xl font-extrabold text-slate-800"></h3>
           <p id="playerCourseDesc" class="text-xs text-slate-600 mt-2"></p>
+          <div class="flex flex-wrap gap-2 mt-4"><a id="playerPdfLink" target="_blank" rel="noopener" class="hidden px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold"><i class="fa-solid fa-file-pdf mr-1"></i> Buka Modul PDF</a><button onclick="startCourseQuiz()" class="px-4 py-2 bg-amber-500 text-slate-900 rounded-xl text-xs font-extrabold"><i class="fa-solid fa-gamepad mr-1"></i> Mulai Quiz</button></div>
         </div>
       </div>
     </div>
@@ -528,328 +529,418 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    const IS_PREVIEW = false; // Ubah ke false saat deploy resmi
+    // KONFIGURASI APLIKASI
+    const IS_PREVIEW = true; // Ubah menjadi false SAAT DEPLOY agar terhubung murni ke Firebase tanpa data dummy
 
+    // PASTE FIREBASE CONFIG ANDA DI SINI
     const firebaseConfig = {
-      apiKey: "AIzaSyAY2FONZxvNWzGDDP3X4AYLss2Cvy784KE",
-      authDomain: "diajar-a1eeb.firebaseapp.com",
-      projectId: "diajar-a1eeb",
-      storageBucket: "diajar-a1eeb.firebasestorage.app",
-      messagingSenderId: "346385828111",
-      appId: "1:346385828111:web:3b7a180fbfa8d66033d67a"
-
+      apiKey: "API_KEY_ANDA",
+      authDomain: "PROJECT_ID.firebaseapp.com",
+      projectId: "PROJECT_ID",
+      storageBucket: "PROJECT_ID.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
     };
 
-    let app, auth, db;
-    if (!IS_PREVIEW) {
-      app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getFirestore(app);
+    let auth, db;
+    if (!IS_PREVIEW) { const app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); }
+
+    const XP = { kelas: 10, duha: 15, dzuhur: 15 };
+    const LABEL = { kelas: 'Kelas', duha: 'Sholat Duha', dzuhur: 'Sholat Dzuhur' };
+    const state = { currentUser: null, courses: [], students: [], attendances: [], search: '' };
+    let activeCourse = null, scanner = null, lastScan = 0, quizRun = null;
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const dateStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+    const timeStr = () => new Date().toTimeString().slice(0, 5);
+    const okYoutube = u => /^https:\/\/(www\.)?youtube(-nocookie)?\.com\/embed\/[\w-]+/.test(u);
+    const toast = m => { const t = document.createElement('div'); t.className = 'fixed top-4 left-1/2 -translate-x-1/2 z-[60] bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl'; t.textContent = m; document.body.appendChild(t); setTimeout(() => t.remove(), 2500); };
+    const empty = (txt, cols) => `<tr><td colspan="${cols}" class="p-4 text-center text-slate-400">${txt}</td></tr>`;
+    const hashPw = async (pw, salt) => {
+      const enc = new TextEncoder(), k = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveBits']);
+      const b = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: enc.encode(salt), iterations: 150000, hash: 'SHA-256' }, k, 256);
+      return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+    };
+    const xpOf = nisn => state.attendances.filter(a => a.studentId === nisn).reduce((t, a) => t + (XP[a.type] || 0), 0);
+    const levelOf = xp => Math.floor(xp / 100) + 1;
+
+    // ===== DATA DUMMY: HANYA UNTUK PREVIEW (maks 2 per koleksi) =====
+    if (IS_PREVIEW) {
+      state.courses = [
+        { id: 'course-1', title: 'Design Thinking Fundamental', category: 'Art', tutor: 'Robert Green', rating: 4.8, youtubeUrl: 'https://www.youtube.com/embed/tgbNymZ7vqY', desc: 'Pelajari metode berpikir desain terstruktur untuk memecahkan masalah secara kreatif.', isQuizPublic: true, quiz: [{ question: 'Tahap pertama Design Thinking adalah?', options: ['Empathize', 'Prototype', 'Test', 'Launch'], answer: 0 }] },
+        { id: 'course-2', title: '3D Illustration Design', category: 'Coding', tutor: 'John Doe', rating: 4.9, youtubeUrl: 'https://www.youtube.com/embed/tgbNymZ7vqY', desc: 'Panduan praktis pembuatan karakter 3D modern.', isQuizPublic: false, quiz: [{ question: 'Software 3D open-source?', options: ['Blender', 'Paint', 'Excel', 'Word'], answer: 0 }] }
+      ];
+      state.students = [
+        { nisn: '2024001', name: 'John Doe', class: '10 IPA 1', sekolah: 'SMA Negeri 1', wa: '6281234567890', salt: 'demo', pwHash: await hashPw('siswa123', 'demo'), verified: true },
+        { nisn: '2024002', name: 'Siti Rahma', class: '10 IPA 1', sekolah: 'SMA Negeri 1', wa: '6289876543210', salt: 'demo', pwHash: await hashPw('siswa123', 'demo'), verified: false }
+      ];
+      state.attendances = [{ id: `${dateStr()}_2024001_kelas`, studentId: '2024001', studentName: 'John Doe', type: 'kelas', date: dateStr(), time: '07:15', waSent: false }];
     }
 
-    const state = {
-      currentUser: null,
-      courses: [
-        {
-          id: "course-1",
-          title: "Design Thinking Fundamental",
-          category: "Art",
-          tutor: "Robert Green",
-          rating: 4.8,
-          badge: "Best seller",
-          youtubeUrl: "https://www.youtube.com/embed/tgbNymZ7vqY",
-          pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-          desc: "Pelajari metode berpikir desain terstruktur untuk memecahkan masalah secara kreatif.",
-          isQuizPublic: true,
-          quiz: [
-            { question: "Apa tahapan pertama dalam Design Thinking?", options: ["Empathize", "Define", "Ideate", "Prototype"], answer: 0 }
-          ]
-        },
-        {
-          id: "course-2",
-          title: "3D Illustration Design",
-          category: "Coding",
-          tutor: "John Doe",
-          rating: 4.9,
-          badge: "Recommended",
-          youtubeUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-          pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-          desc: "Panduan praktis pembuatan karakter 3D modern.",
-          isQuizPublic: false,
-          quiz: [
-            { question: "Software 3D mana yang bersifat open-source?", options: ["Blender", "Paint", "Excel", "Word"], answer: 0 }
-          ]
-        }
-      ],
-      students: [
-        { uid: "siswa1", name: "John Doe", class: "10 IPA 1", nis: "2024001", nisn: "2024001", sekolah: "SMA Negeri 1", wa: "6281234567890", xp: 450, level: 3, verified: true, badges: ["Sholat Duha Master"] },
-        { uid: "siswa2", name: "Siti Rahma", class: "10 IPA 1", nis: "2024002", nisn: "2024002", sekolah: "SMA Negeri 1", wa: "6289876543210", xp: 620, level: 4, verified: true, badges: ["Rajin Absen"] }
-      ],
-      attendances: [
-        { id: "att-1", studentId: "siswa1", studentName: "John Doe", type: "kelas", time: "07:15 WIB", date: "2026-11-12", waSent: true }
-      ]
-    };
+    // ===== AKSES DATA =====
+    async function loadCourses() {
+      if (IS_PREVIEW) return;
+      const s = await getDocs(collection(db, 'courses'));
+      state.courses = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+    async function loadAdminData() {
+      if (IS_PREVIEW) return;
+      const [u, a] = await Promise.all([getDocs(collection(db, 'users')), getDocs(collection(db, 'attendances'))]);
+      state.students = u.docs.map(d => ({ nisn: d.id, ...d.data() }));
+      state.attendances = a.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+    async function loadMyAttendance(nisn) {
+      if (IS_PREVIEW) return;
+      const s = await getDocs(query(collection(db, 'attendances'), where('studentId', '==', nisn)));
+      state.attendances = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
+    async function fetchStudent(nisn) {
+      if (IS_PREVIEW) return state.students.find(s => s.nisn === nisn) || null;
+      const d = await getDoc(doc(db, 'users', nisn));
+      return d.exists() ? { nisn: d.id, ...d.data() } : null;
+    }
+    async function saveCourse(c) {
+      if (IS_PREVIEW) return;
+      const { id, ...data } = c;
+      await setDoc(doc(db, 'courses', id), data);
+    }
+    async function addAttendance(s, type) {
+      const date = dateStr(), id = `${date}_${s.nisn}_${type}`;
+      if (state.attendances.some(a => a.id === id)) return false;
+      const rec = { studentId: s.nisn, studentName: s.name, type, date, time: timeStr(), waSent: false };
+      if (!IS_PREVIEW) {
+        if ((await getDoc(doc(db, 'attendances', id))).exists()) return false;
+        await setDoc(doc(db, 'attendances', id), { ...rec, createdAt: serverTimestamp() });
+      }
+      state.attendances.push({ id, ...rec });
+      return true;
+    }
 
-    let activeCourseForQuiz = null;
-
-    window.navigateTo = function(pageId) {
+    // ===== NAVIGASI =====
+    window.navigateTo = async function (pageId) {
+      if (pageId === 'siswa' && state.currentUser?.role !== 'siswa') pageId = 'login';
+      if (pageId === 'admin' && state.currentUser?.role !== 'admin') pageId = 'login';
+      if (pageId !== 'admin') stopScanner();
       document.querySelectorAll('.view-page').forEach(el => el.classList.add('hidden'));
-      const target = document.getElementById(`page-${pageId}`);
-      if (target) target.classList.remove('hidden');
-
-      const desktopSidebar = document.getElementById('desktopSidebar');
-      if (pageId === 'landing' || pageId === 'login') {
-        desktopSidebar.classList.remove('md:flex');
-        desktopSidebar.classList.add('hidden');
-      } else {
-        desktopSidebar.classList.remove('hidden');
-        desktopSidebar.classList.add('md:flex');
-      }
-
+      $(`page-${pageId}`)?.classList.remove('hidden');
+      const sb = $('desktopSidebar'), showSb = !['landing', 'login'].includes(pageId);
+      sb.classList.toggle('hidden', !showSb); sb.classList.toggle('md:flex', showSb);
       renderNavigationUI();
-      if (pageId === 'landing') renderLandingCourseGrid();
-      if (pageId === 'siswa') renderSiswaView();
-      if (pageId === 'admin') renderAdminView();
+      try {
+        if (pageId === 'landing') { await loadCourses(); renderLandingCourseGrid(); }
+        if (pageId === 'siswa') { await loadMyAttendance(state.currentUser.nisn); renderSiswaView(); }
+        if (pageId === 'admin') { await Promise.all([loadCourses(), loadAdminData()]); renderAdminView(); switchAdminTab('scanner'); }
+      } catch (e) { console.error(e); alert('Gagal memuat data dari Firestore. Periksa koneksi dan Security Rules.'); }
     };
 
-    function renderLandingCourseGrid() {
-      const grid = document.getElementById('landingCourseGrid');
-      if (!grid) return;
-
-      grid.innerHTML = state.courses.map(c => `
-        <div class="bg-white rounded-3xl border border-slate-100 shadow-card overflow-hidden flex flex-col justify-between">
-          <div>
-            <div class="relative h-40 bg-slate-200">
-              <img src="https://placehold.co/600x400/1d40d6/ffffff?text=${encodeURIComponent(c.title)}" class="w-full h-full object-cover">
-              <span class="absolute top-3 left-3 px-3 py-1 bg-amber-400 text-slate-900 text-[10px] font-extrabold rounded-full"><i class="fa-solid fa-star mr-1"></i> ${c.rating}</span>
-            </div>
-            <div class="p-5">
-              <h5 class="font-extrabold text-slate-800 text-base">${c.title}</h5>
-              <p class="text-xs text-slate-400 mt-1">${c.tutor} • ${c.category}</p>
-              <p class="text-xs text-slate-500 mt-2 line-clamp-2">${c.desc}</p>
-            </div>
-          </div>
-          <div class="px-5 pb-5 pt-0 flex flex-col gap-2">
-            <button onclick="handleGuestCourseClick('${c.id}')" class="w-full py-2 bg-brand-600 text-white rounded-xl text-xs font-bold shadow-sm">
-              Buka Materi <i class="fa-solid fa-arrow-right ml-1"></i>
-            </button>
-            ${c.isQuizPublic 
-              ? `<button onclick="playPublicQuiz('${c.id}')" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold rounded-xl text-xs shadow-sm"><i class="fa-solid fa-gamepad mr-1"></i> Mainkan Quiz (Publik)</button>`
-              : `<div class="text-center text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-lock mr-1"></i> Quiz Khusus Siswa Login</div>`
-            }
-          </div>
-        </div>
-      `).join('');
-    }
-
-    window.handleGuestCourseClick = function(courseId) {
-      if (state.currentUser) {
-        openCoursePlayer(courseId);
-      } else {
-        alert('Anda harus Masuk atau Mendaftar akun siswa terlebih dahulu untuk mengakses modul pembelajaran ini!');
-        navigateTo('login');
-      }
-    };
-
-    window.playPublicQuiz = function(courseId) {
-      const course = state.courses.find(c => c.id === courseId);
-      if (!course || !course.quiz || course.quiz.length === 0) return alert('Belum ada soal quiz untuk modul ini.');
-      activeCourseForQuiz = course;
-      startCourseQuiz();
-    };
+    window.handleGlobalSearch = v => { state.search = v.toLowerCase().trim(); renderLandingCourseGrid(); if (state.currentUser?.role === 'siswa') renderSiswaView(); };
+    const filtered = () => state.courses.filter(c => !state.search || `${c.title} ${c.tutor} ${c.category}`.toLowerCase().includes(state.search));
 
     function renderNavigationUI() {
-      const navContainer = document.getElementById('desktopNavLinks');
-      const userProfileContainer = document.getElementById('userProfileSidebar');
-      const headerActions = document.getElementById('headerActions');
-
-      if (!state.currentUser) {
-        navContainer.innerHTML = `
-          <button onclick="navigateTo('landing')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-house text-brand-600"></i> Halaman Utama</button>
-          <button onclick="navigateTo('login')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-right-to-bracket text-brand-600"></i> Masuk / Login</button>
-        `;
-        userProfileContainer.innerHTML = `<button onclick="navigateTo('login')" class="w-full py-2.5 bg-brand-600 text-white font-bold rounded-xl text-xs">Masuk Akun</button>`;
-        headerActions.innerHTML = `<button onclick="navigateTo('login')" class="px-4 py-1.5 bg-brand-600 text-white rounded-full text-xs font-bold">Masuk</button>`;
+      const nav = $('desktopNavLinks'), prof = $('userProfileSidebar'), act = $('headerActions'), mob = $('mobileNav');
+      const u = state.currentUser;
+      mob.classList.toggle('hidden', u?.role !== 'siswa'); mob.classList.toggle('flex', u?.role === 'siswa');
+      if (!u) {
+        nav.innerHTML = `<button onclick="navigateTo('landing')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-house text-brand-600"></i> Halaman Utama</button>
+          <button onclick="navigateTo('login')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-right-to-bracket text-brand-600"></i> Masuk / Login</button>`;
+        prof.innerHTML = `<button onclick="navigateTo('login')" class="w-full py-2.5 bg-brand-600 text-white font-bold rounded-xl text-xs">Masuk Akun</button>`;
+        act.innerHTML = `<button onclick="navigateTo('login')" class="px-4 py-1.5 bg-brand-600 text-white rounded-full text-xs font-bold">Masuk</button>`;
         return;
       }
-
-      if (state.currentUser.role === 'siswa') {
-        navContainer.innerHTML = `
-          <button onclick="navigateTo('siswa')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-brand-600 bg-brand-50 flex items-center gap-3"><i class="fa-solid fa-graduation-cap"></i> Dashboard Siswa</button>
-        `;
-      } else {
-        navContainer.innerHTML = `
-          <button onclick="navigateTo('admin')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-brand-600 bg-brand-50 flex items-center gap-3"><i class="fa-solid fa-chart-line"></i> Dashboard Guru</button>
-        `;
-      }
-
-      userProfileContainer.innerHTML = `
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center text-xs">${state.currentUser.name.charAt(0)}</div>
-          <div class="flex-1 min-w-0"><h5 class="font-bold text-xs truncate">${state.currentUser.name}</h5></div>
-          <button onclick="handleLogout()" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
-        </div>
-      `;
+      const isS = u.role === 'siswa';
+      nav.innerHTML = `<button onclick="navigateTo('landing')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-globe text-brand-600"></i> Halaman Utama</button>
+        <button onclick="navigateTo('${isS ? 'siswa' : 'admin'}')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-brand-600 bg-brand-50 flex items-center gap-3"><i class="fa-solid ${isS ? 'fa-graduation-cap' : 'fa-chart-line'}"></i> ${isS ? 'Dashboard Siswa' : 'Dashboard Guru'}</button>`;
+      prof.innerHTML = `<div class="flex items-center gap-3"><div class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center text-xs">${esc(u.name.charAt(0))}</div><div class="flex-1 min-w-0"><h5 class="font-bold text-xs truncate">${esc(u.name)}</h5></div><button onclick="handleLogout()" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-arrow-right-from-bracket"></i></button></div>`;
+      act.innerHTML = `<button onclick="handleLogout()" class="px-4 py-1.5 bg-slate-900 text-white rounded-full text-xs font-bold">Keluar</button>`;
     }
 
-    window.switchLoginRole = function(role) {
-      const formSiswa = document.getElementById('formLoginSiswa');
-      const formAdmin = document.getElementById('formLoginAdmin');
-      if (role === 'siswa') {
-        formSiswa.classList.remove('hidden'); formAdmin.classList.add('hidden');
-      } else {
-        formAdmin.classList.remove('hidden'); formSiswa.classList.add('hidden');
-      }
+    // ===== LANDING =====
+    function renderLandingCourseGrid() {
+      const list = filtered();
+      $('landingCourseGrid').innerHTML = list.length ? list.map(c => `
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-card overflow-hidden flex flex-col justify-between">
+          <div>
+            <div class="relative h-40 bg-gradient-to-br from-brand-600 to-blue-400 flex items-center justify-center text-white text-4xl"><i class="fa-solid fa-book-open"></i>
+              <span class="absolute top-3 left-3 px-3 py-1 bg-amber-400 text-slate-900 text-[10px] font-extrabold rounded-full"><i class="fa-solid fa-star mr-1"></i> ${esc(c.rating ?? '-')}</span></div>
+            <div class="p-5"><h5 class="font-extrabold text-slate-800 text-base">${esc(c.title)}</h5>
+              <p class="text-xs text-slate-400 mt-1">${esc(c.tutor)} • ${esc(c.category)}</p>
+              <p class="text-xs text-slate-500 mt-2 line-clamp-2">${esc(c.desc)}</p></div>
+          </div>
+          <div class="px-5 pb-5 flex flex-col gap-2">
+            <button onclick="handleGuestCourseClick('${esc(c.id)}')" class="w-full py-2 bg-brand-600 text-white rounded-xl text-xs font-bold shadow-sm">Buka Materi <i class="fa-solid fa-arrow-right ml-1"></i></button>
+            ${c.isQuizPublic ? `<button onclick="playPublicQuiz('${esc(c.id)}')" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold rounded-xl text-xs shadow-sm"><i class="fa-solid fa-gamepad mr-1"></i> Mainkan Quiz (Publik)</button>`
+              : `<div class="text-center text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-lock mr-1"></i> Quiz Khusus Siswa Login</div>`}
+          </div>
+        </div>`).join('') : `<p class="col-span-full text-center text-sm text-slate-400 py-10">Belum ada materi.</p>`;
+    }
+    window.handleGuestCourseClick = id => {
+      if (state.currentUser?.role === 'siswa') return openCoursePlayer(id);
+      alert('Anda harus Masuk atau Mendaftar akun siswa terlebih dahulu untuk mengakses modul pembelajaran ini!');
+      navigateTo('login');
+    };
+    window.playPublicQuiz = id => {
+      const c = state.courses.find(x => x.id === id);
+      if (!c?.isQuizPublic || !c.quiz?.length) return alert('Belum ada soal quiz untuk modul ini.');
+      activeCourse = c; startCourseQuiz();
     };
 
-    window.quickDemoLogin = function(role) {
-      if (role === 'siswa') {
-        document.getElementById('siswaUsername').value = 'siswa1';
-        document.getElementById('siswaPassword').value = '123456';
-        document.getElementById('formLoginSiswa').dispatchEvent(new Event('submit'));
-      }
+    // ===== LOGIN / REGISTER =====
+    window.switchLoginRole = role => {
+      const s = role === 'siswa';
+      $('formLoginSiswa').classList.toggle('hidden', !s); $('formLoginAdmin').classList.toggle('hidden', s);
+      $('tabSiswaBtn').className = `py-2.5 rounded-lg transition-all ${s ? 'bg-white text-brand-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`;
+      $('tabAdminBtn').className = `py-2.5 rounded-lg transition-all ${!s ? 'bg-white text-brand-600 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`;
     };
+    window.quickDemoLogin = () => { if (!IS_PREVIEW) return; $('siswaUsername').value = '2024001'; $('siswaPassword').value = 'siswa123'; $('formLoginSiswa').requestSubmit(); };
 
-    window.handleLoginSiswa = async function(e) {
+    window.handleLoginSiswa = async e => {
       e.preventDefault();
-      const un = document.getElementById('siswaUsername').value;
-      const pass = document.getElementById('siswaPassword').value;
-
-      const found = state.students.find(s => (s.uid === un || s.nisn === un) && s.password === (s.password || '123456'));
-      if (found) {
-        if (!found.verified) return alert('Pendaftaran Anda masih menanti VERIFIKASI GURU!');
-        state.currentUser = { ...found, role: 'siswa' };
+      try {
+        const nisn = $('siswaUsername').value.trim(), pw = $('siswaPassword').value;
+        const s = await fetchStudent(nisn);
+        if (!s || await hashPw(pw, s.salt) !== s.pwHash) return alert('NISN atau Password Siswa salah!');
+        if (!s.verified) return alert('Pendaftaran Anda masih menanti VERIFIKASI GURU!');
+        state.currentUser = { ...s, role: 'siswa' };
+        $('formLoginSiswa').reset();
         navigateTo('siswa');
-      } else {
-        alert('Username/NISN atau Password Siswa salah!');
-      }
+      } catch (err) { console.error(err); alert('Gagal masuk. Periksa koneksi Anda.'); }
     };
 
-    window.handleLoginAdmin = function(e) {
+    window.handleLoginAdmin = async e => {
       e.preventDefault();
-      state.currentUser = { uid: "admin1", name: "Guru Pengajar, S.Pd", role: "admin" };
-      navigateTo('admin');
+      const email = $('adminEmail').value.trim(), pw = $('adminPassword').value;
+      try {
+        if (IS_PREVIEW) {
+          if (email !== 'guru@demo.com' || pw !== 'admin123') return alert('Email atau password admin salah!');
+          state.currentUser = { uid: 'admin-demo', name: 'Guru Pengajar, S.Pd', role: 'admin' };
+        } else {
+          const cred = await signInWithEmailAndPassword(auth, email, pw);
+          const a = await getDoc(doc(db, 'admins', cred.user.uid));
+          if (!a.exists()) { await signOut(auth); return alert('Akun ini tidak terdaftar sebagai Admin.'); }
+          state.currentUser = { uid: cred.user.uid, name: a.data().name || cred.user.email, role: 'admin' };
+        }
+        $('formLoginAdmin').reset();
+        navigateTo('admin');
+      } catch (err) { console.error(err); alert('Email atau password admin salah!'); }
     };
 
-    window.handleLogout = function() {
-      state.currentUser = null;
+    window.handleLogout = async () => {
+      if (!IS_PREVIEW && auth) { try { await signOut(auth); } catch (e) { /* abaikan */ } }
+      state.currentUser = null; state.students = []; state.attendances = [];
       navigateTo('landing');
     };
 
+    window.handleRegisterSiswa = async e => {
+      e.preventDefault();
+      const nisn = $('regNisn').value.trim();
+      if (!/^[A-Za-z0-9]{3,20}$/.test(nisn)) return alert('NISN hanya huruf/angka (3-20 karakter).');
+      let wa = $('regWa').value.replace(/\D/g, ''); if (wa.startsWith('0')) wa = '62' + wa.slice(1);
+      const pw = $('regPassword').value; if (pw.length < 6) return alert('Password minimal 6 karakter.');
+      try {
+        if (await fetchStudent(nisn)) return alert('NISN sudah terdaftar.');
+        const salt = crypto.randomUUID();
+        const rec = { name: $('regNama').value.trim(), class: $('regKelas').value.trim(), nisn, sekolah: $('regSekolah').value.trim(), wa, salt, pwHash: await hashPw(pw, salt), verified: false };
+        if (IS_PREVIEW) state.students.push(rec);
+        else await setDoc(doc(db, 'users', nisn), { ...rec, createdAt: serverTimestamp() });
+        e.target.reset(); closeModalRegisterSiswa();
+        alert('Pendaftaran terkirim. Tunggu verifikasi guru.');
+      } catch (err) { console.error(err); alert('Pendaftaran gagal. Coba lagi.'); }
+    };
+
+    // ===== SISWA =====
     function renderSiswaView() {
-      if (!state.currentUser) return;
-      document.getElementById('studentNameGreeting').textContent = state.currentUser.name;
-      const grid = document.getElementById('studentCourseGrid');
-      grid.innerHTML = state.courses.map(c => `
+      const u = state.currentUser, xp = xpOf(u.nisn), lv = levelOf(xp);
+      $('studentNameGreeting').textContent = u.name; $('studentLevelText').textContent = `Lvl ${lv}`; $('studentXpText').textContent = `${xp} XP`;
+      $('studentQrName').textContent = u.name; $('studentQrClass').textContent = `Kelas ${u.class}`;
+      const qr = $('studentQrCanvas'); qr.innerHTML = '';
+      if (window.QRCode) new QRCode(qr, { text: u.nisn, width: 140, height: 140 });
+      const list = filtered();
+      $('studentCourseGrid').innerHTML = list.length ? list.map(c => `
         <div class="bg-white rounded-3xl border border-slate-100 shadow-card overflow-hidden flex flex-col justify-between">
-          <div class="p-5">
-            <h5 class="font-extrabold text-slate-800 text-base">${c.title}</h5>
-            <p class="text-xs text-slate-400 mt-1">${c.tutor} • ${c.category}</p>
-          </div>
-          <div class="p-5 pt-0">
-            <button onclick="openCoursePlayer('${c.id}')" class="w-full py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">Buka Modul</button>
-          </div>
-        </div>
-      `).join('');
+          <div class="p-5"><h5 class="font-extrabold text-slate-800 text-base">${esc(c.title)}</h5><p class="text-xs text-slate-400 mt-1">${esc(c.tutor)} • ${esc(c.category)}</p></div>
+          <div class="p-5 pt-0"><button onclick="openCoursePlayer('${esc(c.id)}')" class="w-full py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">Buka Modul</button></div>
+        </div>`).join('') : `<p class="col-span-full text-sm text-slate-400">Belum ada materi.</p>`;
+      const today = dateStr();
+      [['duha', 'statusDuha'], ['dzuhur', 'statusDzuhur']].forEach(([t, id]) => {
+        const done = state.attendances.some(a => a.studentId === u.nisn && a.type === t && a.date === today);
+        const el = $(id); el.textContent = done ? 'Sudah Absen ✓' : 'Belum Absen'; el.className = `text-[11px] font-semibold ${done ? 'text-emerald-600' : 'text-amber-600'}`;
+      });
     }
-
-    window.openCoursePlayer = function(courseId) {
-      const course = state.courses.find(c => c.id === courseId);
-      if (!course) return;
-      activeCourseForQuiz = course;
-      document.getElementById('playerCourseTitle').textContent = course.title;
-      document.getElementById('playerCourseDesc').textContent = course.desc;
-      document.getElementById('youtubeIframe').src = course.youtubeUrl;
-      document.getElementById('modalCoursePlayer').classList.remove('hidden');
+    window.markIbadahMandiri = async type => {
+      const u = state.currentUser; if (u?.role !== 'siswa') return;
+      try {
+        if (await addAttendance(u, type)) { toast(`+${XP[type]} XP! ${LABEL[type]} tercatat.`); renderSiswaView(); }
+        else toast('Anda sudah absen hari ini.');
+      } catch (err) { console.error(err); alert('Gagal menyimpan presensi.'); }
     };
+    window.openModalMateriList = () => $('studentCourseGrid').scrollIntoView({ behavior: 'smooth' });
+    window.openModalQrSiswa = () => $('studentQrCanvas').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-    window.closeModalCoursePlayer = function() {
-      document.getElementById('youtubeIframe').src = "";
-      document.getElementById('modalCoursePlayer').classList.add('hidden');
+    window.openCoursePlayer = id => {
+      const c = state.courses.find(x => x.id === id); if (!c) return;
+      activeCourse = c;
+      $('playerModalTitle').textContent = 'Course Player'; $('playerCourseTitle').textContent = c.title; $('playerCourseDesc').textContent = c.desc;
+      $('youtubeIframe').src = okYoutube(c.youtubeUrl) ? c.youtubeUrl : '';
+      const pdf = $('playerPdfLink'); if (c.pdfUrl && /^https?:\/\//.test(c.pdfUrl)) { pdf.href = c.pdfUrl; pdf.classList.remove('hidden'); } else pdf.classList.add('hidden');
+      $('modalCoursePlayer').classList.remove('hidden');
     };
+    window.closeModalCoursePlayer = () => { $('youtubeIframe').src = ''; $('modalCoursePlayer').classList.add('hidden'); };
 
-    window.startCourseQuiz = function() {
-      if (!activeCourseForQuiz || !activeCourseForQuiz.quiz || activeCourseForQuiz.quiz.length === 0) return alert('Soal quiz belum tersedia.');
+    window.startCourseQuiz = () => {
+      if (!activeCourse?.quiz?.length) return alert('Soal quiz belum tersedia.');
       closeModalCoursePlayer();
-      const q = activeCourseForQuiz.quiz[0];
-      document.getElementById('quizQuestionBox').innerHTML = `
-        <div class="space-y-4">
-          <h4 class="font-bold text-slate-800 text-sm">${q.question}</h4>
-          <div class="space-y-2">
-            ${q.options.map((opt, idx) => `
-              <button onclick="submitQuizAnswer(${idx}, ${q.answer})" class="w-full p-3 text-left border rounded-xl text-xs font-semibold hover:bg-brand-50">${String.fromCharCode(65 + idx)}. ${opt}</button>
-            `).join('')}
-          </div>
-        </div>
-      `;
-      document.getElementById('modalQuizEngine').classList.remove('hidden');
+      quizRun = { i: 0, score: 0 }; $('quizModalTitle').textContent = activeCourse.title;
+      renderQuizQuestion(); $('modalQuizEngine').classList.remove('hidden');
     };
-
-    window.submitQuizAnswer = function(selected, correct) {
-      document.getElementById('modalQuizEngine').classList.add('hidden');
-      if (selected === correct) alert('Jawaban Anda BENAR! 🎉');
-      else alert('Jawaban kurang tepat.');
-    };
-
-    function renderAdminView() {
-      const quizTargetSelect = document.getElementById('quizTargetCourseSelect');
-      if (quizTargetSelect) {
-        quizTargetSelect.innerHTML = state.courses.map(c => `<option value="${c.id}">${c.title}</option>`).join('');
-      }
-      renderAdminQuizBank();
+    function renderQuizQuestion() {
+      const qs = activeCourse.quiz, q = qs[quizRun.i];
+      $('quizQuestionBox').innerHTML = `<div class="space-y-4"><p class="text-[11px] text-slate-400 font-bold">Soal ${quizRun.i + 1} / ${qs.length}</p>
+        <h4 class="font-bold text-slate-800 text-sm">${esc(q.question)}</h4>
+        <div class="space-y-2">${q.options.map((o, i) => `<button onclick="submitQuizAnswer(${i})" class="w-full p-3 text-left border rounded-xl text-xs font-semibold hover:bg-brand-50">${String.fromCharCode(65 + i)}. ${esc(o)}</button>`).join('')}</div></div>`;
     }
+    window.submitQuizAnswer = sel => {
+      const qs = activeCourse.quiz; if (sel === qs[quizRun.i].answer) quizRun.score++;
+      if (++quizRun.i < qs.length) return renderQuizQuestion();
+      const pct = Math.round(quizRun.score / qs.length * 100);
+      $('quizQuestionBox').innerHTML = `<div class="text-center space-y-3"><div class="text-4xl">${pct >= 70 ? '🎉' : '💪'}</div><h4 class="font-extrabold text-slate-800">Skor: ${quizRun.score} / ${qs.length} (${pct}%)</h4>
+        <button onclick="document.getElementById('modalQuizEngine').classList.add('hidden')" class="px-5 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">Selesai</button></div>`;
+    };
+
+    // ===== ADMIN =====
+    function renderAdminView() { renderScannerTable(); renderVerifikasi(); renderAdminCourses(); renderAdminQuizBank(); renderReport(); }
+
+    window.switchAdminTab = tab => {
+      ['scanner', 'verifikasi', 'materi', 'quiz', 'laporan'].forEach(t => {
+        const N = t.charAt(0).toUpperCase() + t.slice(1);
+        $(`adminTab${N}`)?.classList.toggle('hidden', t !== tab);
+        const b = $(`adminTab${N}Btn`); if (b) b.className = `px-4 py-2.5 rounded-xl ${t === tab ? 'bg-brand-600 text-white' : 'text-slate-600'}`;
+      });
+      if (tab === 'scanner') startScanner(); else stopScanner();
+    };
+
+    async function startScanner() {
+      if (scanner || typeof Html5Qrcode === 'undefined') return;
+      try {
+        scanner = new Html5Qrcode('reader');
+        await scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 200 }, txt => { if (Date.now() - lastScan > 2500) { lastScan = Date.now(); processScan(txt); } });
+      } catch (e) { scanner = null; $('reader').textContent = 'Kamera tidak tersedia. Gunakan input manual.'; }
+    }
+    async function stopScanner() { if (!scanner) return; const s = scanner; scanner = null; try { await s.stop(); s.clear(); } catch (e) { /* abaikan */ } }
+
+    async function processScan(txt) {
+      try {
+        const s = await fetchStudent(String(txt).trim());
+        if (!s) return toast('Siswa tidak ditemukan.');
+        if (!s.verified) return toast('Siswa belum terverifikasi.');
+        const t = $('scanPresensiType').value;
+        toast(await addAttendance(s, t) ? `✓ ${s.name} - ${LABEL[t]}` : `${s.name} sudah absen.`);
+        renderScannerTable(); renderReport();
+      } catch (e) { console.error(e); toast('Gagal menyimpan presensi.'); }
+    }
+    window.handleManualScan = () => { const v = $('manualScanInput').value.trim(); if (v) { processScan(v); $('manualScanInput').value = ''; } };
+
+    function renderScannerTable() {
+      const rows = state.attendances.filter(a => a.date === dateStr()).sort((a, b) => b.time.localeCompare(a.time));
+      $('attendanceTableBody').innerHTML = rows.length ? rows.map(a => `<tr class="border-t"><td class="p-3 font-semibold">${esc(a.studentName)}</td><td class="p-3">${esc(LABEL[a.type] || a.type)}</td><td class="p-3">${esc(a.time)}</td>
+        <td class="p-3">${a.waSent ? '<span class="text-emerald-600 font-bold">Terkirim</span>' : '<span class="text-slate-400">Belum</span>'}</td>
+        <td class="p-3 text-center"><button onclick="sendWA('${esc(a.id)}')" class="px-2.5 py-1 bg-emerald-500 text-white rounded-lg"><i class="fa-brands fa-whatsapp"></i></button></td></tr>`).join('') : empty('Belum ada presensi hari ini.', 5);
+    }
+    window.sendWA = async id => {
+      const a = state.attendances.find(x => x.id === id), s = state.students.find(x => x.nisn === a?.studentId); if (!a || !s?.wa) return alert('Nomor WA ortu tidak tersedia.');
+      window.open(`https://wa.me/${s.wa}?text=${encodeURIComponent(`Assalamu'alaikum, ananda ${a.studentName} telah hadir (${LABEL[a.type] || a.type}) pada ${a.date} pukul ${a.time}.`)}`, '_blank', 'noopener');
+      try { if (!IS_PREVIEW) await updateDoc(doc(db, 'attendances', id), { waSent: true }); a.waSent = true; renderScannerTable(); } catch (e) { console.error(e); }
+    };
+
+    function renderVerifikasi() {
+      const p = state.students.filter(s => !s.verified); $('pendingBadgeCount').textContent = p.length;
+      $('verifikasiTableBody').innerHTML = p.length ? p.map(s => `<tr class="border-t"><td class="p-3">${esc(s.nisn)}</td><td class="p-3 font-semibold">${esc(s.name)}</td><td class="p-3">${esc(s.class)}</td><td class="p-3">${esc(s.sekolah)}</td>
+        <td class="p-3 flex gap-2"><button onclick="verifySiswa('${esc(s.nisn)}',true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold">Setujui</button><button onclick="verifySiswa('${esc(s.nisn)}',false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold">Tolak</button></td></tr>`).join('') : empty('Tidak ada pendaftaran menunggu.', 5);
+    }
+    window.verifySiswa = async (nisn, ok) => {
+      try {
+        if (ok) { if (!IS_PREVIEW) await updateDoc(doc(db, 'users', nisn), { verified: true }); state.students.find(s => s.nisn === nisn).verified = true; }
+        else { if (!confirm('Tolak dan hapus pendaftaran ini?')) return; if (!IS_PREVIEW) await deleteDoc(doc(db, 'users', nisn)); state.students = state.students.filter(s => s.nisn !== nisn); }
+        renderVerifikasi(); renderReport();
+      } catch (e) { console.error(e); alert('Aksi gagal.'); }
+    };
+
+    function renderAdminCourses() {
+      $('adminCourseListGrid').innerHTML = state.courses.length ? state.courses.map(c => `<div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-soft space-y-2">
+        <h5 class="font-extrabold text-slate-800 text-sm">${esc(c.title)}</h5><p class="text-xs text-slate-400">${esc(c.tutor)} • ${esc(c.category)} • ${(c.quiz || []).length} soal</p>
+        <button onclick="deleteCourse('${esc(c.id)}')" class="text-xs text-rose-600 font-bold"><i class="fa-solid fa-trash mr-1"></i> Hapus</button></div>`).join('') : `<p class="text-sm text-slate-400">Belum ada materi. Klik "+ Tambah Materi".</p>`;
+    }
+    window.handleSaveCourse = async e => {
+      e.preventDefault();
+      const url = $('inputCourseYoutube').value.trim(); if (!okYoutube(url)) return alert('URL harus berformat https://www.youtube.com/embed/XXXX');
+      const c = { id: `c-${Date.now()}`, title: $('inputCourseTitle').value.trim(), category: $('inputCourseCategory').value, tutor: $('inputCourseTutor').value.trim(), rating: 5, youtubeUrl: url, desc: $('inputCourseDesc').value.trim(), isQuizPublic: false, quiz: [] };
+      try { await saveCourse(c); state.courses.push(c); e.target.reset(); closeModalCreateCourse(); renderAdminView(); toast('Materi diposting.'); } catch (err) { console.error(err); alert('Gagal menyimpan materi.'); }
+    };
+    window.deleteCourse = async id => {
+      if (!confirm('Hapus materi ini beserta quiz-nya?')) return;
+      try { if (!IS_PREVIEW) await deleteDoc(doc(db, 'courses', id)); state.courses = state.courses.filter(c => c.id !== id); renderAdminView(); } catch (e) { console.error(e); alert('Gagal menghapus.'); }
+    };
 
     function renderAdminQuizBank() {
-      const container = document.getElementById('quizBankListContainer');
-      if (!container) return;
-      container.innerHTML = state.courses.map(c => `
-        <div class="p-4 bg-slate-50 border rounded-2xl space-y-3">
-          <div class="flex items-center justify-between border-b pb-2">
-            <h5 class="font-extrabold text-slate-800 text-sm">${c.title}</h5>
-            <button onclick="toggleQuizVisibility('${c.id}')" class="px-3 py-1 rounded-full text-[10px] font-bold ${c.isQuizPublic ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}">
-              <i class="fa-solid ${c.isQuizPublic ? 'fa-globe' : 'fa-lock'} mr-1"></i> ${c.isQuizPublic ? 'Status: Publik (Bisa Dimainkan Guest)' : 'Status: Private (Siswa Login Only)'}
-            </button>
-          </div>
-          <div class="space-y-2">
-            ${(!c.quiz || c.quiz.length === 0) ? `<p class="text-[11px] text-slate-400">Belum ada soal quiz.</p>` : c.quiz.map((q, qIdx) => `
-              <div class="p-3 bg-white border rounded-xl flex justify-between text-xs">
-                <div><p class="font-bold text-slate-800">${qIdx + 1}. ${q.question}</p></div>
-                <button onclick="deleteQuizQuestion('${c.id}', ${qIdx})" class="text-rose-600"><i class="fa-solid fa-trash"></i></button>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
+      $('quizTargetCourseSelect').innerHTML = state.courses.map(c => `<option value="${esc(c.id)}">${esc(c.title)}</option>`).join('');
+      $('quizBankListContainer').innerHTML = state.courses.length ? state.courses.map(c => `<div class="p-4 bg-slate-50 border rounded-2xl space-y-3">
+        <div class="flex items-center justify-between border-b pb-2"><h5 class="font-extrabold text-slate-800 text-sm">${esc(c.title)}</h5>
+          <button onclick="toggleQuizVisibility('${esc(c.id)}')" class="px-3 py-1 rounded-full text-[10px] font-bold ${c.isQuizPublic ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}"><i class="fa-solid ${c.isQuizPublic ? 'fa-globe' : 'fa-lock'} mr-1"></i> ${c.isQuizPublic ? 'Publik (Bisa Dimainkan Guest)' : 'Private (Siswa Login)'}</button></div>
+        <div class="space-y-2">${!(c.quiz || []).length ? '<p class="text-[11px] text-slate-400">Belum ada soal quiz.</p>' : c.quiz.map((q, i) => `<div class="p-3 bg-white border rounded-xl flex justify-between text-xs"><p class="font-bold text-slate-800">${i + 1}. ${esc(q.question)}</p>
+          <button onclick="deleteQuizQuestion('${esc(c.id)}',${i})" class="text-rose-600"><i class="fa-solid fa-trash"></i></button></div>`).join('')}</div></div>`).join('') : '<p class="text-sm text-slate-400">Tambahkan materi terlebih dahulu.</p>';
+    }
+    window.toggleQuizVisibility = async id => {
+      const c = state.courses.find(x => x.id === id); if (!c) return;
+      try { c.isQuizPublic = !c.isQuizPublic; await saveCourse(c); renderAdminQuizBank(); } catch (e) { c.isQuizPublic = !c.isQuizPublic; console.error(e); alert('Gagal menyimpan.'); }
+    };
+    window.handleSaveQuizQuestion = async e => {
+      e.preventDefault();
+      const c = state.courses.find(x => x.id === $('quizTargetCourseSelect').value); if (!c) return alert('Pilih materi terlebih dahulu.');
+      c.quiz = c.quiz || [];
+      c.quiz.push({ question: $('quizQuestionInput').value.trim(), options: ['A', 'B', 'C', 'D'].map(k => $(`quizOption${k}`).value.trim()), answer: Number($('quizCorrectAnswerSelect').value) });
+      try { await saveCourse(c); e.target.reset(); renderAdminView(); toast('Soal disimpan.'); } catch (err) { c.quiz.pop(); console.error(err); alert('Gagal menyimpan soal.'); }
+    };
+    window.deleteQuizQuestion = async (id, idx) => {
+      const c = state.courses.find(x => x.id === id); if (!c) return; const [removed] = c.quiz.splice(idx, 1);
+      try { await saveCourse(c); renderAdminView(); } catch (e) { c.quiz.splice(idx, 0, removed); console.error(e); alert('Gagal menghapus soal.'); }
+    };
+
+    const reportRows = () => state.students.filter(s => s.verified).map(s => ({ NIS: s.nisn, 'Nama Siswa': s.name, Kelas: s.class, Presensi: state.attendances.filter(a => a.studentId === s.nisn).length, 'XP Poin': xpOf(s.nisn) }));
+    function renderReport() {
+      const r = reportRows();
+      $('reportTableBody').innerHTML = r.length ? r.map(x => `<tr class="border-t"><td class="p-3">${esc(x.NIS)}</td><td class="p-3 font-semibold">${esc(x['Nama Siswa'])}</td><td class="p-3">${esc(x.Kelas)}</td><td class="p-3">${x.Presensi}</td><td class="p-3 font-bold text-amber-600">${x['XP Poin']}</td></tr>`).join('') : empty('Belum ada data siswa terverifikasi.', 5);
+    }
+    window.exportReportToExcel = () => {
+      const r = reportRows(); if (!r.length) return alert('Tidak ada data untuk diekspor.');
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(r), 'Rekap'); XLSX.writeFile(wb, `rekap-diajar-${dateStr()}.xlsx`);
+    };
+    window.exportReportToPDF = () => {
+      const r = reportRows(); if (!r.length) return alert('Tidak ada data untuk diekspor.');
+      const pdf = new window.jspdf.jsPDF(); pdf.text('Rekapitulasi Presensi & XP - DiAjar', 14, 15);
+      pdf.autoTable({ startY: 22, head: [['NIS', 'Nama Siswa', 'Kelas', 'Presensi', 'XP Poin']], body: r.map(x => Object.values(x)) });
+      pdf.save(`rekap-diajar-${dateStr()}.pdf`);
+    };
+
+    // ===== MODAL & PWA =====
+    const modal = (id, show) => () => $(id).classList.toggle('hidden', !show);
+    window.openModalRegisterSiswa = modal('modalRegisterSiswa', true); window.closeModalRegisterSiswa = modal('modalRegisterSiswa', false);
+    window.openModalCreateCourse = modal('modalCreateCourse', true); window.closeModalCreateCourse = modal('modalCreateCourse', false);
+    window.openMobileMoreMenu = modal('modalMobileMoreMenu', true); window.closeMobileMoreMenu = modal('modalMobileMoreMenu', false);
+
+    function registerServiceWorker() {
+      if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
+      const sw = `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)))});`;
+      navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw], { type: 'text/javascript' }))).catch(() => { /* browser menolak SW dari Blob: aplikasi tetap berjalan normal */ });
     }
 
-    window.toggleQuizVisibility = function(courseId) {
-      const course = state.courses.find(c => c.id === courseId);
-      if (course) {
-        course.isQuizPublic = !course.isQuizPublic;
-        renderAdminQuizBank();
-      }
-    };
-
-    window.switchAdminTab = function(tabName) {
-      ['scanner', 'verifikasi', 'materi', 'quiz', 'laporan'].forEach(t => {
-        const tabEl = document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-        if (tabEl) {
-          if (t === tabName) tabEl.classList.remove('hidden');
-          else tabEl.classList.add('hidden');
-        }
-      });
-    };
-
-    window.openModalRegisterSiswa = function() { document.getElementById('modalRegisterSiswa').classList.remove('hidden'); };
-    window.closeModalRegisterSiswa = function() { document.getElementById('modalRegisterSiswa').classList.add('hidden'); };
-    window.openModalCreateCourse = function() { document.getElementById('modalCreateCourse').classList.remove('hidden'); };
-    window.closeModalCreateCourse = function() { document.getElementById('modalCreateCourse').classList.add('hidden'); };
-    window.openMobileMoreMenu = function() { document.getElementById('modalMobileMoreMenu').classList.remove('hidden'); };
-    window.closeMobileMoreMenu = function() { document.getElementById('modalMobileMoreMenu').classList.add('hidden'); };
-
     window.addEventListener('DOMContentLoaded', () => {
+      if (IS_PREVIEW) {
+        const b = $('previewBanner'); b.classList.remove('hidden'); b.classList.add('flex');
+        $('formLoginAdmin').insertAdjacentHTML('afterend', `<p class="mt-4 text-[11px] text-slate-500 bg-amber-50 border border-amber-100 rounded-xl p-3">Akun demo — Siswa: <b>2024001</b> / <b>siswa123</b> · Admin: <b>guru@demo.com</b> / <b>admin123</b></p>`);
+      } else $('demoBtn').classList.add('hidden');
+      registerServiceWorker();
       navigateTo('landing');
     });
   </script>
