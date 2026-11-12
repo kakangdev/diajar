@@ -437,6 +437,7 @@
         <button onclick="closeMobileMoreMenu()"><i class="fa-solid fa-xmark text-lg text-slate-400"></i></button>
       </div>
       <div class="grid grid-cols-2 gap-3">
+        <button onclick="closeMobileMoreMenu(); navigateTo('siswa');" class="p-4 bg-brand-50 border border-brand-100 rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-graduation-cap text-brand-600 text-lg"></i><span class="text-xs font-bold text-brand-700">Dashboard Saya</span></button>
         <button onclick="closeMobileMoreMenu(); navigateTo('landing');" class="p-4 bg-slate-50 border rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-globe text-brand-600 text-lg"></i><span class="text-xs font-bold">Halaman Utama</span></button>
         <button onclick="closeMobileMoreMenu(); markIbadahMandiri('duha');" class="p-4 bg-slate-50 border rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-sun text-amber-500 text-lg"></i><span class="text-xs font-bold">Absen Duha</span></button>
         <button onclick="closeMobileMoreMenu(); markIbadahMandiri('dzuhur');" class="p-4 bg-slate-50 border rounded-2xl flex flex-col items-center gap-2"><i class="fa-solid fa-cloud-sun text-blue-500 text-lg"></i><span class="text-xs font-bold">Absen Dzuhur</span></button>
@@ -532,12 +533,13 @@
 
     // PASTE FIREBASE CONFIG ANDA DI SINI
     const firebaseConfig = {
-     apiKey: "AIzaSyAY2FONZxvNWzGDDP3X4AYLss2Cvy784KE",
+    apiKey: "AIzaSyAY2FONZxvNWzGDDP3X4AYLss2Cvy784KE",
     authDomain: "diajar-a1eeb.firebaseapp.com",
     projectId: "diajar-a1eeb",
     storageBucket: "diajar-a1eeb.firebasestorage.app",
     messagingSenderId: "346385828111",
     appId: "1:346385828111:web:3b7a180fbfa8d66033d67a"
+
     };
 
     let auth, db;
@@ -644,7 +646,7 @@
       $(`page-${pageId}`)?.classList.remove('hidden');
       $('mobileSearch').classList.toggle('hidden', !['landing', 'siswa'].includes(pageId));
       const sb = $('desktopSidebar'), showSb = !['landing', 'login'].includes(pageId);
-      sb.classList.toggle('hidden', !showSb); sb.classList.toggle('md:flex', showSb);
+      sb.classList.add('hidden'); sb.classList.toggle('md:flex', showSb);
       renderNavigationUI();
       try {
         if (pageId === 'landing') { await loadCourses(); renderLandingCourseGrid(); }
@@ -793,8 +795,8 @@
         else toast('Anda sudah absen hari ini.');
       } catch (err) { console.error(err); alert('Gagal menyimpan presensi.'); }
     };
-    window.openModalMateriList = () => $('studentCourseGrid').scrollIntoView({ behavior: 'smooth' });
-    window.openModalQrSiswa = () => $('studentQrCanvas').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.openModalMateriList = async () => { if (curPage !== 'siswa') await navigateTo('siswa'); $('studentCourseGrid').scrollIntoView({ behavior: 'smooth' }); };
+    window.openModalQrSiswa = async () => { if (curPage !== 'siswa') await navigateTo('siswa'); $('studentQrCanvas').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
 
     window.openCoursePlayer = id => {
       const c = state.courses.find(x => x.id === id); if (!c) return;
@@ -876,9 +878,9 @@
       const u = state.currentUser, nav = $('mobileNav');
       const it = (ic, lb, fn, on) => `<button onclick="${fn}" class="flex-1 min-w-0 flex flex-col items-center gap-0.5 py-2 ${on ? 'text-brand-600' : 'text-slate-400'}"><i class="fa-solid ${ic} text-lg"></i><span class="text-[10px] font-semibold leading-none truncate">${lb}</span></button>`;
       if (!u) nav.innerHTML = it('fa-house', 'Beranda', "navigateTo('landing')", curPage === 'landing') + it('fa-magnifying-glass', 'Cari', "navigateTo('landing');document.getElementById('mobileSearchInput').focus()", false) + it('fa-right-to-bracket', 'Masuk', "navigateTo('login')", curPage === 'login');
-      else if (u.role === 'siswa') nav.innerHTML = it('fa-house', 'Home', "navigateTo('siswa')", curPage === 'siswa') + it('fa-book-bookmark', 'Materi', 'openModalMateriList()', false)
+      else if (u.role === 'siswa') nav.innerHTML = it('fa-house', 'Beranda', "navigateTo('landing')", curPage === 'landing') + it('fa-book-bookmark', 'Materi', 'openModalMateriList()', false)
         + `<button onclick="openModalQrSiswa()" class="flex-1 flex flex-col items-center gap-0.5 pb-2"><div class="w-12 h-12 -mt-5 rounded-full bg-brand-600 text-white flex items-center justify-center shadow-lg ring-4 ring-white"><i class="fa-solid fa-qrcode text-lg"></i></div><span class="text-[10px] font-semibold text-brand-600 leading-none">Presensi</span></button>`
-        + it('fa-globe', 'Beranda', "navigateTo('landing')", curPage === 'landing') + it('fa-bars', 'Menu', 'openMobileMoreMenu()', false);
+        + it('fa-bars', 'Menu', 'openMobileMoreMenu()', false);
       else nav.innerHTML = [['scanner', 'fa-qrcode', 'Scan'], ['verifikasi', 'fa-user-check', 'Siswa'], ['materi', 'fa-folder-open', 'Materi'], ['quiz', 'fa-gamepad', 'Quiz'], ['laporan', 'fa-file-invoice', 'Laporan']]
         .map(([t, ic, lb]) => it(ic, lb, `navigateTo('admin');switchAdminTab('${t}')`, curPage === 'admin' && adminTab === t)).join('');
     }
