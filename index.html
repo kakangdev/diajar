@@ -314,7 +314,7 @@
             <button onclick="openModalCreateCourse()" class="px-4 py-2.5 bg-brand-600 text-white rounded-xl font-bold text-xs">+ Tambah Materi</button>
           </div>
 
-          <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-soft hidden md:flex flex-wrap gap-2 text-xs font-bold">
+          <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-soft hidden">
             <button onclick="switchAdminTab('scanner')" id="adminTabScannerBtn" class="px-4 py-2.5 rounded-xl bg-brand-600 text-white"><i class="fa-solid fa-qrcode mr-1"></i> Scanner Presensi</button>
             <button onclick="switchAdminTab('verifikasi')" id="adminTabVerifikasiBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-user-check mr-1"></i> Data Siswa <span id="pendingBadgeCount" class="px-1.5 py-0.5 bg-rose-500 text-white rounded-full text-[10px]">0</span></button>
             <button onclick="switchAdminTab('materi')" id="adminTabMateriBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-folder-open mr-1"></i> Kelola Materi</button>
@@ -508,7 +508,12 @@
       <form onsubmit="handleSaveCourse(event)" class="space-y-3">
         <div><label class="block text-xs font-bold text-slate-700 mb-1">Judul Materi</label><input type="text" id="inputCourseTitle" required class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
         <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold text-slate-700 mb-1">Kategori</label><select id="inputCourseCategory" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"><option value="Art">Art</option><option value="Coding">Coding</option><option value="Marketing">Marketing</option><option value="Business">Business</option></select></div>
+          <div><label class="block text-xs font-bold text-slate-700 mb-1">Kategori</label>
+            <div class="flex gap-2"><select id="inputCourseCategory" class="flex-1 min-w-0 p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></select><button type="button" onclick="toggleCatPanel()" class="px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold whitespace-nowrap"><i class="fa-solid fa-tags mr-1"></i> Kelola</button></div>
+            <div id="catPanel" class="hidden mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+              <div class="flex gap-2"><input type="text" id="catNameInput" maxlength="40" placeholder="Nama kategori" onkeydown="if(event.key==='Enter'){event.preventDefault();saveCategory()}" class="flex-1 min-w-0 p-2 bg-white border rounded-lg text-xs outline-none"><button type="button" id="catSaveBtn" onclick="saveCategory()" class="px-3 bg-brand-600 text-white rounded-lg text-xs font-bold">Tambah</button><button type="button" id="catCancelBtn" onclick="resetCatForm()" class="hidden px-3 bg-slate-200 text-slate-700 rounded-lg text-xs font-bold">Batal</button></div>
+              <div id="catList" class="space-y-1 max-h-40 overflow-y-auto"></div>
+            </div></div>
           <div><label class="block text-xs font-bold text-slate-700 mb-1">Pengajar</label><input type="text" id="inputCourseTutor" required class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
         </div>
         <div><label class="block text-xs font-bold text-slate-700 mb-1">Embed URL Video YouTube</label><input type="url" id="inputCourseYoutube" required placeholder="https://www.youtube.com/embed/XXXX" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
@@ -566,8 +571,8 @@
     const normWa = v => { let w = v.replace(/\D/g, ''); return w.startsWith('0') ? '62' + w.slice(1) : w; };
     const XP = { kelas: 10, duha: 15, dzuhur: 15 };
     const LABEL = { kelas: 'Kelas', duha: 'Sholat Duha', dzuhur: 'Sholat Dzuhur' };
-    const state = { currentUser: null, courses: [], students: [], attendances: [], search: '' };
-    let curPage = 'landing', adminTab = 'scanner', editingCourse = null, editingNisn = null, editingQuiz = null, activeCourse = null, scanner = null, lastScan = 0, quizRun = null;
+    const state = { currentUser: null, categories: [], courses: [], students: [], attendances: [], search: '' };
+    let curPage = 'landing', adminTab = 'scanner', editingCourse = null, editingNisn = null, editingCat = null, editingQuiz = null, activeCourse = null, scanner = null, lastScan = 0, quizRun = null;
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -590,6 +595,7 @@
         { id: 'course-1', title: 'Design Thinking Fundamental', category: 'Art', tutor: 'Robert Green', rating: 4.8, youtubeUrl: 'https://www.youtube.com/embed/tgbNymZ7vqY', desc: 'Pelajari metode berpikir desain terstruktur untuk memecahkan masalah secara kreatif.', isQuizPublic: true, quiz: [{ question: 'Tahap pertama Design Thinking adalah?', options: ['Empathize', 'Prototype', 'Test', 'Launch'], answer: 0 }] },
         { id: 'course-2', title: '3D Illustration Design', category: 'Coding', tutor: 'John Doe', rating: 4.9, youtubeUrl: 'https://www.youtube.com/embed/tgbNymZ7vqY', desc: 'Panduan praktis pembuatan karakter 3D modern.', isQuizPublic: false, quiz: [{ question: 'Software 3D open-source?', options: ['Blender', 'Paint', 'Excel', 'Word'], answer: 0 }] }
       ];
+      state.categories = [{ id: 'cat-1', name: 'Art' }, { id: 'cat-2', name: 'Coding' }];
       state.students = [
         { nisn: '2024001', name: 'John Doe', class: '10 IPA 1', sekolah: 'SMA Negeri 1', wa: '6281234567890', salt: 'demo', pwHash: await hashPw('siswa123', 'demo'), verified: true },
         { nisn: '2024002', name: 'Siti Rahma', class: '10 IPA 1', sekolah: 'SMA Negeri 1', wa: '6289876543210', salt: 'demo', pwHash: await hashPw('siswa123', 'demo'), verified: false }
@@ -605,9 +611,10 @@
     }
     async function loadAdminData() {
       if (IS_PREVIEW) return;
-      const [u, a] = await Promise.all([getDocs(collection(db, 'users')), getDocs(collection(db, 'attendances'))]);
+      const [u, a, k] = await Promise.all([getDocs(collection(db, 'users')), getDocs(collection(db, 'attendances')), getDocs(collection(db, 'categories'))]);
       state.students = u.docs.map(d => ({ nisn: d.id, ...d.data() }));
       state.attendances = a.docs.map(d => ({ id: d.id, ...d.data() }));
+      state.categories = k.docs.map(d => ({ id: d.id, ...d.data() }));
     }
     async function loadMyAttendance(nisn) {
       if (IS_PREVIEW) return;
@@ -659,6 +666,11 @@
     window.handleGlobalSearch = v => { state.search = v.toLowerCase().trim(); renderLandingCourseGrid(); if (state.currentUser?.role === 'siswa') renderSiswaView(); };
     const filtered = () => state.courses.filter(c => !state.search || `${c.title} ${c.tutor} ${c.category}`.toLowerCase().includes(state.search));
 
+    const adminSubNav = () => [['scanner', 'fa-qrcode', 'Scanner Presensi'], ['verifikasi', 'fa-user-check', 'Data Siswa'], ['materi', 'fa-folder-open', 'Kelola Materi'], ['quiz', 'fa-gamepad', 'Kelola Quiz & Soal'], ['laporan', 'fa-file-invoice', 'Rekap Laporan']].map(([t, ic, lb]) => {
+      const on = curPage === 'admin' && adminTab === t, pend = t === 'verifikasi' ? state.students.filter(x => !x.verified).length : 0;
+      return `<button onclick="goAdmin('${t}')" class="w-full text-left pl-9 pr-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-3 ${on ? 'bg-brand-50 text-brand-600' : 'text-slate-600 hover:bg-slate-100'}"><i class="fa-solid ${ic} w-4 text-center"></i><span class="flex-1">${lb}</span>${pend ? `<span class="px-1.5 py-0.5 bg-rose-500 text-white rounded-full text-[10px]">${pend}</span>` : ''}</button>`;
+    }).join('');
+
     function renderNavigationUI() {
       const nav = $('desktopNavLinks'), prof = $('userProfileSidebar'), act = $('headerActions'), mob = $('mobileNav');
       const u = state.currentUser;
@@ -672,7 +684,7 @@
       }
       const isS = u.role === 'siswa';
       nav.innerHTML = `<button onclick="navigateTo('landing')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-globe text-brand-600"></i> Halaman Utama</button>
-        <button onclick="navigateTo('${isS ? 'siswa' : 'admin'}')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-brand-600 bg-brand-50 flex items-center gap-3"><i class="fa-solid ${isS ? 'fa-graduation-cap' : 'fa-chart-line'}"></i> ${isS ? 'Dashboard Siswa' : 'Dashboard Guru'}</button>`;
+        <button onclick="navigateTo('${isS ? 'siswa' : 'admin'}')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-brand-600 bg-brand-50 flex items-center gap-3"><i class="fa-solid ${isS ? 'fa-graduation-cap' : 'fa-chart-line'}"></i> ${isS ? 'Dashboard Siswa' : 'Dashboard Guru'}</button>${isS ? '' : adminSubNav()}`;
       prof.innerHTML = `<div class="flex items-center gap-3"><div class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center text-xs">${esc(u.name.charAt(0))}</div><div class="flex-1 min-w-0"><h5 class="font-bold text-xs truncate">${esc(u.name)}</h5></div><button onclick="handleLogout()" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-arrow-right-from-bracket"></i></button></div>`;
       act.innerHTML = `<button onclick="handleLogout()" class="px-4 py-1.5 bg-slate-900 text-white rounded-full text-xs font-bold">Keluar</button>`;
     }
@@ -830,7 +842,7 @@
     };
 
     // ===== ADMIN =====
-    function renderAdminView() { renderScannerTable(); renderVerifikasi(); renderAdminCourses(); renderAdminQuizBank(); renderReport(); }
+    function renderAdminView() { renderCategories(); renderScannerTable(); renderVerifikasi(); renderAdminCourses(); renderAdminQuizBank(); renderReport(); }
 
     window.switchAdminTab = tab => {
       ['scanner', 'verifikasi', 'materi', 'quiz', 'laporan'].forEach(t => {
@@ -838,7 +850,7 @@
         $(`adminTab${N}`)?.classList.toggle('hidden', t !== tab);
         const b = $(`adminTab${N}Btn`); if (b) b.className = `px-4 py-2.5 rounded-xl ${t === tab ? 'bg-brand-600 text-white' : 'text-slate-600'}`;
       });
-      adminTab = tab; renderMobileNav();
+      adminTab = tab; renderNavigationUI();
       if (tab === 'scanner') startScanner(); else stopScanner();
     };
 
@@ -885,7 +897,7 @@
     // ===== CRUD SISWA =====
     function renderVerifikasi() {
       const p = state.students.filter(s => !s.verified), v = state.students.filter(s => s.verified);
-      $('pendingBadgeCount').textContent = p.length;
+      $('pendingBadgeCount').textContent = p.length; renderNavigationUI();
       $('verifikasiTableBody').innerHTML = p.length ? p.map(s => `<tr class="border-t"><td class="p-3">${esc(s.nisn)}</td><td class="p-3 font-semibold">${esc(s.name)}</td><td class="p-3">${esc(s.class)}</td><td class="p-3">${esc(s.sekolah)}</td>
         <td class="p-3 flex gap-2"><button onclick="verifySiswa('${esc(s.nisn)}',true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold">Setujui</button><button onclick="deleteStudent('${esc(s.nisn)}')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold">Tolak</button></td></tr>`).join('') : empty('Tidak ada pendaftaran menunggu.', 5);
       $('studentTableBody').innerHTML = v.length ? v.map(s => `<tr class="border-t"><td class="p-3">${esc(s.nisn)}</td><td class="p-3 font-semibold">${esc(s.name)}</td><td class="p-3">${esc(s.class)}</td><td class="p-3">${esc(s.sekolah)}</td><td class="p-3">${esc(s.wa)}</td>
@@ -930,6 +942,51 @@
       try { if (!IS_PREVIEW) await deleteDoc(doc(db, 'attendances', id)); state.attendances = state.attendances.filter(a => a.id !== id); renderScannerTable(); renderReport(); } catch (e) { console.error(e); alert('Gagal menghapus.'); }
     };
 
+    // ===== CRUD KATEGORI =====
+    function renderCategories(want) {
+      const sel = $('inputCourseCategory'), keep = want !== undefined ? want : sel.value;
+      const sorted = [...state.categories].sort((a, b) => a.name.localeCompare(b.name)), names = sorted.map(c => c.name);
+      const opts = keep && !names.includes(keep) ? [...names, keep] : names;
+      sel.innerHTML = opts.length ? opts.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('') : '<option value="">(Belum ada kategori)</option>';
+      if (keep) sel.value = keep;
+      $('catList').innerHTML = sorted.length ? sorted.map(c => `<div class="flex items-center justify-between gap-2 bg-white border rounded-lg px-3 py-1.5 text-xs"><span class="font-semibold text-slate-700 truncate">${esc(c.name)} <span class="text-slate-400 font-normal">(${state.courses.filter(x => x.category === c.name).length} materi)</span></span>
+        <span class="flex gap-3 flex-shrink-0"><button type="button" onclick="editCategory('${esc(c.id)}')" class="text-brand-600"><i class="fa-solid fa-pen"></i></button><button type="button" onclick="deleteCategory('${esc(c.id)}')" class="text-rose-600"><i class="fa-solid fa-trash"></i></button></span></div>`).join('') : '<p class="text-[11px] text-slate-400">Belum ada kategori. Tambahkan di atas.</p>';
+    }
+    window.toggleCatPanel = () => $('catPanel').classList.toggle('hidden');
+    function resetCatForm() { editingCat = null; $('catNameInput').value = ''; $('catSaveBtn').textContent = 'Tambah'; $('catCancelBtn').classList.add('hidden'); }
+    window.resetCatForm = resetCatForm;
+    window.editCategory = id => {
+      const c = state.categories.find(x => x.id === id); if (!c) return;
+      editingCat = id; $('catNameInput').value = c.name; $('catSaveBtn').textContent = 'Simpan'; $('catCancelBtn').classList.remove('hidden'); $('catNameInput').focus();
+    };
+    window.saveCategory = async () => {
+      const name = $('catNameInput').value.trim().replace(/\s+/g, ' ');
+      if (!name || name.length > 40) return alert('Nama kategori wajib diisi (maks. 40 karakter).');
+      if (state.categories.some(c => c.id !== editingCat && c.name.toLowerCase() === name.toLowerCase())) return alert('Kategori sudah ada.');
+      const cur = $('inputCourseCategory').value;
+      try {
+        let pick = name;
+        if (editingCat) {
+          const c = state.categories.find(x => x.id === editingCat), oldName = c.name, affected = state.courses.filter(x => x.category === oldName);
+          if (!IS_PREVIEW) { await updateDoc(doc(db, 'categories', c.id), { name }); await Promise.all(affected.map(x => updateDoc(doc(db, 'courses', x.id), { category: name }))); }
+          c.name = name; affected.forEach(x => { x.category = name; });
+          pick = cur === oldName ? name : cur;
+        } else {
+          const rec = { id: `cat-${Date.now()}`, name };
+          if (!IS_PREVIEW) await setDoc(doc(db, 'categories', rec.id), { name });
+          state.categories.push(rec);
+        }
+        resetCatForm(); renderCategories(pick); renderAdminCourses(); toast('Kategori disimpan.');
+      } catch (e) { console.error(e); alert('Gagal menyimpan kategori.'); }
+    };
+    window.deleteCategory = async id => {
+      const c = state.categories.find(x => x.id === id); if (!c) return;
+      const n = state.courses.filter(x => x.category === c.name).length;
+      if (n) return alert(`Kategori "${c.name}" masih dipakai ${n} materi. Ubah kategori materi tersebut terlebih dahulu.`);
+      if (!confirm(`Hapus kategori "${c.name}"?`)) return;
+      try { if (!IS_PREVIEW) await deleteDoc(doc(db, 'categories', id)); state.categories = state.categories.filter(x => x.id !== id); if (editingCat === id) resetCatForm(); renderCategories(); toast('Kategori dihapus.'); } catch (e) { console.error(e); alert('Gagal menghapus kategori.'); }
+    };
+
     // ===== CRUD MATERI =====
     function renderAdminCourses() {
       $('adminCourseListGrid').innerHTML = state.courses.length ? state.courses.map(c => `<div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-soft space-y-2">
@@ -940,7 +997,7 @@
     window.openCourseForm = id => {
       editingCourse = id; const c = id ? state.courses.find(x => x.id === id) : null;
       $('courseModalTitle').textContent = c ? 'Edit Materi' : 'Tambah Materi Baru'; $('courseSubmitBtn').textContent = c ? 'Simpan Perubahan' : 'Posting Materi';
-      $('inputCourseTitle').value = c?.title || ''; $('inputCourseCategory').value = c?.category || 'Art'; $('inputCourseTutor').value = c?.tutor || '';
+      $('inputCourseTitle').value = c?.title || ''; renderCategories(c?.category || ''); resetCatForm(); $('catPanel').classList.add('hidden'); $('inputCourseTutor').value = c?.tutor || '';
       $('inputCourseYoutube').value = c?.youtubeUrl || ''; $('inputCoursePdf').value = c?.pdfUrl || ''; $('inputCourseDesc').innerHTML = sanitize(c?.desc || '');
       $('modalCreateCourse').classList.remove('hidden');
     };
@@ -952,6 +1009,7 @@
       const dEd = $('inputCourseDesc');
       if (!dEd.textContent.trim() && !dEd.querySelector('img')) return alert('Deskripsi tidak boleh kosong.');
       const f = { title: $('inputCourseTitle').value.trim(), category: $('inputCourseCategory').value, tutor: $('inputCourseTutor').value.trim(), youtubeUrl: url, pdfUrl: pdf, desc: sanitize(dEd.innerHTML) };
+      if (!f.category) return alert('Pilih atau tambahkan kategori terlebih dahulu (tombol Kelola).');
       const old = state.courses.find(c => c.id === editingCourse), c = old ? { ...old, ...f } : { id: `c-${Date.now()}`, rating: 5, isQuizPublic: false, quiz: [], ...f };
       try { await saveCourse(c); if (old) Object.assign(old, c); else state.courses.push(c); closeModalCreateCourse(); renderAdminView(); toast('Materi disimpan.'); } catch (err) { console.error(err); alert(err.message.startsWith('Ukuran') ? err.message : 'Gagal menyimpan materi.'); }
     };
