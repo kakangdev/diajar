@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>DiAjar - Modern E-Learning & Presensi Digital</title>
   
   <!-- PWA Manifest Data URI -->
@@ -72,6 +72,10 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+      .rich{word-break:break-word}.rich img{max-width:100%;height:auto;border-radius:.75rem;margin:.25rem 0}
+    .rich ul{list-style:disc;padding-left:1.25rem}.rich ol{list-style:decimal;padding-left:1.25rem}
+    .rich:empty:before{content:attr(data-placeholder);color:#94a3b8}
+    #mobileNav{padding-bottom:env(safe-area-inset-bottom,0px)}
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
@@ -101,7 +105,7 @@
     </aside>
 
     <!-- MAIN CONTENT AREA -->
-    <main class="flex-1 flex flex-col min-w-0 pb-24 md:pb-8">
+    <main class="flex-1 flex flex-col min-w-0 pb-28 md:pb-8">
       
       <!-- TOP HEADER BAR WITH DIAJAR BRAND LOGO -->
       <header id="topHeader" class="bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-slate-100 px-4 md:px-8 py-3.5 flex items-center justify-between">
@@ -125,6 +129,7 @@
           </div>
         </div>
       </header>
+      <div id="mobileSearch" class="sm:hidden bg-white px-4 py-2.5 border-b border-slate-100"><div class="relative"><i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i><input type="text" id="mobileSearchInput" placeholder="Cari materi..." oninput="handleGlobalSearch(this.value)" class="w-full pl-9 pr-4 py-2 bg-slate-100 text-xs rounded-full outline-none focus:ring-2 focus:ring-brand-500"></div></div>
 
       <!-- PAGE VIEWS CONTAINER -->
       <div class="p-4 md:p-8 flex-1">
@@ -301,7 +306,7 @@
 
         <!-- ================= PAGE 4: DASHBOARD ADMIN/GURU ================= -->
         <section id="page-admin" class="view-page hidden space-y-6">
-          <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-lg flex justify-between items-center">
+          <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <span class="px-3 py-1 bg-brand-600 text-white rounded-full text-xs font-bold">Portal Tenaga Pendidik</span>
               <h3 class="text-2xl font-extrabold mt-2">Dashboard Pengelolaan Pembelajaran</h3>
@@ -309,9 +314,9 @@
             <button onclick="openModalCreateCourse()" class="px-4 py-2.5 bg-brand-600 text-white rounded-xl font-bold text-xs">+ Tambah Materi</button>
           </div>
 
-          <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-soft flex flex-wrap gap-2 text-xs font-bold">
+          <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-soft hidden md:flex flex-wrap gap-2 text-xs font-bold">
             <button onclick="switchAdminTab('scanner')" id="adminTabScannerBtn" class="px-4 py-2.5 rounded-xl bg-brand-600 text-white"><i class="fa-solid fa-qrcode mr-1"></i> Scanner Presensi</button>
-            <button onclick="switchAdminTab('verifikasi')" id="adminTabVerifikasiBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-user-check mr-1"></i> Verifikasi Siswa <span id="pendingBadgeCount" class="px-1.5 py-0.5 bg-rose-500 text-white rounded-full text-[10px]">0</span></button>
+            <button onclick="switchAdminTab('verifikasi')" id="adminTabVerifikasiBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-user-check mr-1"></i> Data Siswa <span id="pendingBadgeCount" class="px-1.5 py-0.5 bg-rose-500 text-white rounded-full text-[10px]">0</span></button>
             <button onclick="switchAdminTab('materi')" id="adminTabMateriBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-folder-open mr-1"></i> Kelola Materi</button>
             <button onclick="switchAdminTab('quiz')" id="adminTabQuizBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-gamepad mr-1"></i> Kelola Quiz & Soal</button>
             <button onclick="switchAdminTab('laporan')" id="adminTabLaporanBtn" class="px-4 py-2.5 rounded-xl text-slate-600"><i class="fa-solid fa-file-invoice mr-1"></i> Rekap Laporan</button>
@@ -347,16 +352,11 @@
           </div>
 
           <!-- SUB-TAB VERIFIKASI -->
-          <div id="adminTabVerifikasi" class="hidden bg-white p-6 rounded-3xl border border-slate-100 shadow-soft space-y-4">
-            <h4 class="font-bold text-slate-800 text-base">Persetujuan Pendaftaran Siswa Baru</h4>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50">
-                  <tr><th class="p-3">NISN</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Sekolah</th><th class="p-3">Aksi</th></tr>
-                </thead>
-                <tbody id="verifikasiTableBody"></tbody>
-              </table>
-            </div>
+          <div id="adminTabVerifikasi" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft space-y-4"><h4 class="font-bold text-slate-800 text-base">Persetujuan Pendaftaran Siswa Baru</h4>
+              <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50"><tr><th class="p-3">NISN</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Sekolah</th><th class="p-3">Aksi</th></tr></thead><tbody id="verifikasiTableBody"></tbody></table></div></div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft space-y-4"><div class="flex flex-wrap gap-2 justify-between items-center"><h4 class="font-bold text-slate-800 text-base">Data Siswa Terverifikasi</h4><button onclick="openStudentForm()" class="px-3 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">+ Tambah Siswa</button></div>
+              <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50"><tr><th class="p-3">NISN</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Sekolah</th><th class="p-3">No. WA</th><th class="p-3">Aksi</th></tr></thead><tbody id="studentTableBody"></tbody></table></div></div>
           </div>
 
           <!-- SUB-TAB MATERI -->
@@ -368,7 +368,7 @@
           <div id="adminTabQuiz" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft space-y-4">
-                <h4 class="font-bold text-slate-800 text-base">Buat Soal Quiz Baru</h4>
+                <h4 id="quizFormTitle" class="font-bold text-slate-800 text-base">Buat Soal Quiz Baru</h4>
                 <form onsubmit="handleSaveQuizQuestion(event)" class="space-y-3">
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Target Modul Materi</label>
@@ -376,7 +376,7 @@
                   </div>
                   <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Pertanyaan Soal</label>
-                    <textarea id="quizQuestionInput" rows="2" required placeholder="Tuliskan pertanyaan..." class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none"></textarea>
+                    <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50"><div class="flex flex-wrap gap-0.5 p-1.5 border-b bg-white" onmousedown="event.preventDefault()"><button type="button" title="Tebal" onclick="fmt('bold')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-bold"></i></button><button type="button" title="Miring" onclick="fmt('italic')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-italic"></i></button><button type="button" title="Garis bawah" onclick="fmt('underline')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-underline"></i></button><button type="button" title="Rata kiri" onclick="fmt('justifyLeft')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-align-left"></i></button><button type="button" title="Tengah" onclick="fmt('justifyCenter')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-align-center"></i></button><button type="button" title="Rata kanan" onclick="fmt('justifyRight')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-align-right"></i></button><button type="button" title="Rata kanan-kiri" onclick="fmt('justifyFull')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-align-justify"></i></button><button type="button" title="Bullet" onclick="fmt('insertUnorderedList')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-list-ul"></i></button><button type="button" title="Numbering" onclick="fmt('insertOrderedList')" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-list-ol"></i></button><button type="button" title="Sisipkan gambar" onclick="document.getElementById('quizImageInput').click()" class="w-8 h-8 rounded-lg text-slate-600 hover:bg-brand-50 hover:text-brand-600 text-xs"><i class="fa-solid fa-image"></i></button></div><div id="quizQuestionEditor" contenteditable="true" data-placeholder="Tuliskan pertanyaan..." class="rich min-h-[90px] max-h-60 overflow-y-auto p-2.5 text-xs outline-none"></div></div><input type="file" id="quizImageInput" accept="image/*" class="hidden" onchange="insertQuizImage(this)">
                   </div>
                   <div class="space-y-1.5">
                     <input type="text" id="quizOptionA" required placeholder="Opsi A" class="w-full p-2 bg-slate-50 border rounded-xl text-xs">
@@ -393,7 +393,7 @@
                       <option value="3">Opsi D</option>
                     </select>
                   </div>
-                  <button type="submit" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold rounded-xl text-xs">Simpan Soal Quiz</button>
+                  <button id="quizSubmitBtn" type="submit" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold rounded-xl text-xs">Simpan Soal Quiz</button><button id="quizCancelBtn" type="button" onclick="cancelQuizEdit()" class="hidden w-full py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl text-xs">Batal Edit</button>
                 </form>
               </div>
 
@@ -413,12 +413,12 @@
                 <button onclick="exportReportToPDF()" class="px-3 py-2 bg-rose-600 text-white font-bold rounded-xl text-xs"><i class="fa-solid fa-file-pdf mr-1"></i> PDF</button>
               </div>
             </div>
-            <table id="reportMainTable" class="w-full text-left text-xs">
+            <div class="overflow-x-auto"><table id="reportMainTable" class="w-full text-left text-xs">
               <thead class="bg-slate-100">
                 <tr><th class="p-3">NIS</th><th class="p-3">Nama Siswa</th><th class="p-3">Kelas</th><th class="p-3">Presensi</th><th class="p-3">XP Poin</th></tr>
               </thead>
               <tbody id="reportTableBody"></tbody>
-            </table>
+            </table></div>
           </div>
         </section>
 
@@ -426,15 +426,7 @@
     </main>
 
     <!-- SMARTPHONE BOTTOM NAV -->
-    <nav id="mobileNav" class="hidden md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-100 px-3 py-2 flex items-center justify-around z-40">
-      <button onclick="navigateTo('siswa')" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px] font-semibold">Home</span></button>
-      <button onclick="openModalMateriList()" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-book-bookmark text-lg"></i><span class="text-[10px] font-semibold">Materi</span></button>
-      <button onclick="openModalQrSiswa()" class="flex flex-col items-center gap-1 text-slate-400">
-        <div class="w-10 h-10 -mt-5 bg-brand-600 text-white rounded-full flex items-center justify-center shadow-lg text-lg"><i class="fa-solid fa-qrcode"></i></div>
-        <span class="text-[10px] font-semibold text-brand-600">Presensi</span>
-      </button>
-      <button onclick="openMobileMoreMenu()" class="flex flex-col items-center gap-1 text-slate-400"><i class="fa-solid fa-bars text-lg"></i><span class="text-[10px] font-semibold">Menu</span></button>
-    </nav>
+    <nav id="mobileNav" class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-slate-100 px-1 flex items-end justify-around z-40"></nav>
   </div>
 
   <!-- MODAL DRAWER MOBILE MORE MENU -->
@@ -475,7 +467,7 @@
 
   <!-- MODAL QUIZ ENGINE -->
   <div id="modalQuizEngine" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-6">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
         <h4 id="quizModalTitle" class="font-extrabold text-slate-800 text-base">Quiz Player</h4>
         <button onclick="document.getElementById('modalQuizEngine').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
@@ -486,7 +478,7 @@
 
   <!-- MODAL REGISTER SISWA -->
   <div id="modalRegisterSiswa" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4">
+    <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
         <h4 class="font-bold text-slate-800 text-base">Formulir Pendaftaran Siswa</h4>
         <button onclick="closeModalRegisterSiswa()"><i class="fa-solid fa-xmark"></i></button>
@@ -507,9 +499,9 @@
 
   <!-- MODAL BUAT MATERI -->
   <div id="modalCreateCourse" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-3">
-        <h4 class="font-bold text-slate-800 text-base">Tambah Materi Baru</h4>
+        <h4 id="courseModalTitle" class="font-bold text-slate-800 text-base">Tambah Materi Baru</h4>
         <button onclick="closeModalCreateCourse()"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form onsubmit="handleSaveCourse(event)" class="space-y-3">
@@ -519,12 +511,16 @@
           <div><label class="block text-xs font-bold text-slate-700 mb-1">Pengajar</label><input type="text" id="inputCourseTutor" required class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
         </div>
         <div><label class="block text-xs font-bold text-slate-700 mb-1">Embed URL Video YouTube</label><input type="url" id="inputCourseYoutube" required placeholder="https://www.youtube.com/embed/XXXX" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
+        <div><label class="block text-xs font-bold text-slate-700 mb-1">Link Modul PDF (opsional)</label><input type="url" id="inputCoursePdf" placeholder="https://..." class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
         <div><label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi</label><textarea id="inputCourseDesc" rows="3" required class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></textarea></div>
-        <button type="submit" class="w-full py-3 bg-brand-600 text-white font-bold rounded-xl text-xs shadow-md">Posting Materi</button>
+        <button id="courseSubmitBtn" type="submit" class="w-full py-3 bg-brand-600 text-white font-bold rounded-xl text-xs shadow-md">Posting Materi</button>
       </form>
     </div>
   </div>
-
+  <div id="modalStudentForm" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4"><div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center border-b pb-3"><h4 id="studentFormTitle" class="font-bold text-slate-800 text-base">Tambah Siswa</h4><button onclick="closeStudentForm()"><i class="fa-solid fa-xmark"></i></button></div>
+    <form onsubmit="handleSaveStudent(event)" class="space-y-3"><div><label class="block text-xs font-bold text-slate-700 mb-1">NISN (Username)</label><input type="text" id="sfNisn" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div><div><label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap</label><input type="text" id="sfNama" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div><div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold text-slate-700 mb-1">Kelas</label><input type="text" id="sfKelas" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div><div><label class="block text-xs font-bold text-slate-700 mb-1">Sekolah</label><input type="text" id="sfSekolah" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div></div><div><label class="block text-xs font-bold text-slate-700 mb-1">No. WA Ortu</label><input type="tel" id="sfWa" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div><div><label class="block text-xs font-bold text-slate-700 mb-1">Password</label><input type="password" id="sfPassword" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs outline-none"></div>
+    <button type="submit" class="w-full py-3 bg-brand-600 text-white font-bold rounded-xl text-xs shadow-md">Simpan</button></form></div></div>
   <!-- SCRIPT UTAMA DIAJAR MODULE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -542,16 +538,33 @@
     storageBucket: "diajar-a1eeb.firebasestorage.app",
     messagingSenderId: "346385828111",
     appId: "1:346385828111:web:3b7a180fbfa8d66033d67a"
-
     };
 
     let auth, db;
     if (!IS_PREVIEW) { const app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app); }
 
+    const ALLOW = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'P', 'DIV', 'BR', 'UL', 'OL', 'LI', 'IMG', 'SPAN', 'FONT']), DROP = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'TEMPLATE', 'SVG', 'MATH']);
+    function sanitize(html) {
+      const d = new DOMParser().parseFromString(`<body>${html || ''}</body>`, 'text/html');
+      (function walk(n) {
+        [...n.childNodes].forEach(c => {
+          if (c.nodeType === 3) return;
+          if (c.nodeType !== 1 || DROP.has(c.tagName.toUpperCase())) return c.remove();
+          if (!ALLOW.has(c.tagName)) { walk(c); return c.replaceWith(...c.childNodes); }
+          const al = c.style?.textAlign, src = c.getAttribute('src');
+          [...c.attributes].forEach(a => c.removeAttribute(a.name));
+          if (['left', 'center', 'right', 'justify'].includes(al)) c.style.textAlign = al;
+          if (c.tagName === 'IMG') { if (!/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(src || '')) return c.remove(); c.setAttribute('src', src); c.setAttribute('alt', 'gambar soal'); }
+          walk(c);
+        });
+      })(d.body);
+      return d.body.innerHTML;
+    }
+    const normWa = v => { let w = v.replace(/\D/g, ''); return w.startsWith('0') ? '62' + w.slice(1) : w; };
     const XP = { kelas: 10, duha: 15, dzuhur: 15 };
     const LABEL = { kelas: 'Kelas', duha: 'Sholat Duha', dzuhur: 'Sholat Dzuhur' };
     const state = { currentUser: null, courses: [], students: [], attendances: [], search: '' };
-    let activeCourse = null, scanner = null, lastScan = 0, quizRun = null;
+    let curPage = 'landing', adminTab = 'scanner', editingCourse = null, editingNisn = null, editingQuiz = null, activeCourse = null, scanner = null, lastScan = 0, quizRun = null;
 
     const $ = id => document.getElementById(id);
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -606,6 +619,7 @@
     async function saveCourse(c) {
       if (IS_PREVIEW) return;
       const { id, ...data } = c;
+      if (JSON.stringify(data).length > 900000) throw new Error('Ukuran materi + gambar melebihi batas 1 MB Firestore. Perkecil/kurangi gambar.');
       await setDoc(doc(db, 'courses', id), data);
     }
     async function addAttendance(s, type) {
@@ -622,11 +636,13 @@
 
     // ===== NAVIGASI =====
     window.navigateTo = async function (pageId) {
+      curPage = pageId;
       if (pageId === 'siswa' && state.currentUser?.role !== 'siswa') pageId = 'login';
       if (pageId === 'admin' && state.currentUser?.role !== 'admin') pageId = 'login';
       if (pageId !== 'admin') stopScanner();
       document.querySelectorAll('.view-page').forEach(el => el.classList.add('hidden'));
       $(`page-${pageId}`)?.classList.remove('hidden');
+      $('mobileSearch').classList.toggle('hidden', !['landing', 'siswa'].includes(pageId));
       const sb = $('desktopSidebar'), showSb = !['landing', 'login'].includes(pageId);
       sb.classList.toggle('hidden', !showSb); sb.classList.toggle('md:flex', showSb);
       renderNavigationUI();
@@ -643,7 +659,7 @@
     function renderNavigationUI() {
       const nav = $('desktopNavLinks'), prof = $('userProfileSidebar'), act = $('headerActions'), mob = $('mobileNav');
       const u = state.currentUser;
-      mob.classList.toggle('hidden', u?.role !== 'siswa'); mob.classList.toggle('flex', u?.role === 'siswa');
+      renderMobileNav();
       if (!u) {
         nav.innerHTML = `<button onclick="navigateTo('landing')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-house text-brand-600"></i> Halaman Utama</button>
           <button onclick="navigateTo('login')" class="w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-3"><i class="fa-solid fa-right-to-bracket text-brand-600"></i> Masuk / Login</button>`;
@@ -799,7 +815,7 @@
     function renderQuizQuestion() {
       const qs = activeCourse.quiz, q = qs[quizRun.i];
       $('quizQuestionBox').innerHTML = `<div class="space-y-4"><p class="text-[11px] text-slate-400 font-bold">Soal ${quizRun.i + 1} / ${qs.length}</p>
-        <h4 class="font-bold text-slate-800 text-sm">${esc(q.question)}</h4>
+        <div class="rich font-semibold text-slate-800 text-sm">${sanitize(q.question)}</div>
         <div class="space-y-2">${q.options.map((o, i) => `<button onclick="submitQuizAnswer(${i})" class="w-full p-3 text-left border rounded-xl text-xs font-semibold hover:bg-brand-50">${String.fromCharCode(65 + i)}. ${esc(o)}</button>`).join('')}</div></div>`;
     }
     window.submitQuizAnswer = sel => {
@@ -819,6 +835,7 @@
         $(`adminTab${N}`)?.classList.toggle('hidden', t !== tab);
         const b = $(`adminTab${N}Btn`); if (b) b.className = `px-4 py-2.5 rounded-xl ${t === tab ? 'bg-brand-600 text-white' : 'text-slate-600'}`;
       });
+      adminTab = tab; renderMobileNav();
       if (tab === 'scanner') startScanner(); else stopScanner();
     };
 
@@ -847,7 +864,7 @@
       const rows = state.attendances.filter(a => a.date === dateStr()).sort((a, b) => b.time.localeCompare(a.time));
       $('attendanceTableBody').innerHTML = rows.length ? rows.map(a => `<tr class="border-t"><td class="p-3 font-semibold">${esc(a.studentName)}</td><td class="p-3">${esc(LABEL[a.type] || a.type)}</td><td class="p-3">${esc(a.time)}</td>
         <td class="p-3">${a.waSent ? '<span class="text-emerald-600 font-bold">Terkirim</span>' : '<span class="text-slate-400">Belum</span>'}</td>
-        <td class="p-3 text-center"><button onclick="sendWA('${esc(a.id)}')" class="px-2.5 py-1 bg-emerald-500 text-white rounded-lg"><i class="fa-brands fa-whatsapp"></i></button></td></tr>`).join('') : empty('Belum ada presensi hari ini.', 5);
+        <td class="p-3 text-center whitespace-nowrap"><button onclick="sendWA('${esc(a.id)}')" class="px-2.5 py-1 bg-emerald-500 text-white rounded-lg"><i class="fa-brands fa-whatsapp"></i></button> <button onclick="deleteAttendance('${esc(a.id)}')" class="px-2.5 py-1 bg-rose-100 text-rose-600 rounded-lg"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('') : empty('Belum ada presensi hari ini.', 5);
     }
     window.sendWA = async id => {
       const a = state.attendances.find(x => x.id === id), s = state.students.find(x => x.nisn === a?.studentId); if (!a || !s?.wa) return alert('Nomor WA ortu tidak tersedia.');
@@ -855,57 +872,144 @@
       try { if (!IS_PREVIEW) await updateDoc(doc(db, 'attendances', id), { waSent: true }); a.waSent = true; renderScannerTable(); } catch (e) { console.error(e); }
     };
 
-    function renderVerifikasi() {
-      const p = state.students.filter(s => !s.verified); $('pendingBadgeCount').textContent = p.length;
-      $('verifikasiTableBody').innerHTML = p.length ? p.map(s => `<tr class="border-t"><td class="p-3">${esc(s.nisn)}</td><td class="p-3 font-semibold">${esc(s.name)}</td><td class="p-3">${esc(s.class)}</td><td class="p-3">${esc(s.sekolah)}</td>
-        <td class="p-3 flex gap-2"><button onclick="verifySiswa('${esc(s.nisn)}',true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold">Setujui</button><button onclick="verifySiswa('${esc(s.nisn)}',false)" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold">Tolak</button></td></tr>`).join('') : empty('Tidak ada pendaftaran menunggu.', 5);
+    function renderMobileNav() {
+      const u = state.currentUser, nav = $('mobileNav');
+      const it = (ic, lb, fn, on) => `<button onclick="${fn}" class="flex-1 min-w-0 flex flex-col items-center gap-0.5 py-2 ${on ? 'text-brand-600' : 'text-slate-400'}"><i class="fa-solid ${ic} text-lg"></i><span class="text-[10px] font-semibold leading-none truncate">${lb}</span></button>`;
+      if (!u) nav.innerHTML = it('fa-house', 'Beranda', "navigateTo('landing')", curPage === 'landing') + it('fa-magnifying-glass', 'Cari', "navigateTo('landing');document.getElementById('mobileSearchInput').focus()", false) + it('fa-right-to-bracket', 'Masuk', "navigateTo('login')", curPage === 'login');
+      else if (u.role === 'siswa') nav.innerHTML = it('fa-house', 'Home', "navigateTo('siswa')", curPage === 'siswa') + it('fa-book-bookmark', 'Materi', 'openModalMateriList()', false)
+        + `<button onclick="openModalQrSiswa()" class="flex-1 flex flex-col items-center gap-0.5 pb-2"><div class="w-12 h-12 -mt-5 rounded-full bg-brand-600 text-white flex items-center justify-center shadow-lg ring-4 ring-white"><i class="fa-solid fa-qrcode text-lg"></i></div><span class="text-[10px] font-semibold text-brand-600 leading-none">Presensi</span></button>`
+        + it('fa-globe', 'Beranda', "navigateTo('landing')", curPage === 'landing') + it('fa-bars', 'Menu', 'openMobileMoreMenu()', false);
+      else nav.innerHTML = [['scanner', 'fa-qrcode', 'Scan'], ['verifikasi', 'fa-user-check', 'Siswa'], ['materi', 'fa-folder-open', 'Materi'], ['quiz', 'fa-gamepad', 'Quiz'], ['laporan', 'fa-file-invoice', 'Laporan']]
+        .map(([t, ic, lb]) => it(ic, lb, `navigateTo('admin');switchAdminTab('${t}')`, curPage === 'admin' && adminTab === t)).join('');
     }
-    window.verifySiswa = async (nisn, ok) => {
+
+    // ===== CRUD SISWA =====
+    function renderVerifikasi() {
+      const p = state.students.filter(s => !s.verified), v = state.students.filter(s => s.verified);
+      $('pendingBadgeCount').textContent = p.length;
+      $('verifikasiTableBody').innerHTML = p.length ? p.map(s => `<tr class="border-t"><td class="p-3">${esc(s.nisn)}</td><td class="p-3 font-semibold">${esc(s.name)}</td><td class="p-3">${esc(s.class)}</td><td class="p-3">${esc(s.sekolah)}</td>
+        <td class="p-3 flex gap-2"><button onclick="verifySiswa('${esc(s.nisn)}',true)" class="px-2.5 py-1 bg-emerald-600 text-white rounded-lg font-bold">Setujui</button><button onclick="deleteStudent('${esc(s.nisn)}')" class="px-2.5 py-1 bg-rose-600 text-white rounded-lg font-bold">Tolak</button></td></tr>`).join('') : empty('Tidak ada pendaftaran menunggu.', 5);
+      $('studentTableBody').innerHTML = v.length ? v.map(s => `<tr class="border-t"><td class="p-3">${esc(s.nisn)}</td><td class="p-3 font-semibold">${esc(s.name)}</td><td class="p-3">${esc(s.class)}</td><td class="p-3">${esc(s.sekolah)}</td><td class="p-3">${esc(s.wa)}</td>
+        <td class="p-3 whitespace-nowrap"><button onclick="openStudentForm('${esc(s.nisn)}')" class="px-2.5 py-1 bg-brand-50 text-brand-600 rounded-lg"><i class="fa-solid fa-pen"></i></button> <button onclick="deleteStudent('${esc(s.nisn)}')" class="px-2.5 py-1 bg-rose-100 text-rose-600 rounded-lg"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('') : empty('Belum ada siswa terverifikasi.', 6);
+    }
+    window.verifySiswa = async nisn => {
+      try { if (!IS_PREVIEW) await updateDoc(doc(db, 'users', nisn), { verified: true }); state.students.find(s => s.nisn === nisn).verified = true; renderVerifikasi(); renderReport(); } catch (e) { console.error(e); alert('Aksi gagal.'); }
+    };
+    window.deleteStudent = async nisn => {
+      if (!confirm('Hapus data siswa ini?')) return;
+      try { if (!IS_PREVIEW) await deleteDoc(doc(db, 'users', nisn)); state.students = state.students.filter(s => s.nisn !== nisn); renderVerifikasi(); renderReport(); } catch (e) { console.error(e); alert('Gagal menghapus.'); }
+    };
+    window.openStudentForm = nisn => {
+      editingNisn = nisn || null; const s = nisn ? state.students.find(x => x.nisn === nisn) : null;
+      $('studentFormTitle').textContent = s ? 'Edit Data Siswa' : 'Tambah Siswa';
+      $('sfNisn').value = s?.nisn || ''; $('sfNisn').disabled = !!s; $('sfNama').value = s?.name || ''; $('sfKelas').value = s?.class || ''; $('sfSekolah').value = s?.sekolah || ''; $('sfWa').value = s?.wa || '';
+      $('sfPassword').value = ''; $('sfPassword').placeholder = s ? 'Kosongkan jika tidak diganti' : 'Min. 6 karakter';
+      $('modalStudentForm').classList.remove('hidden');
+    };
+    window.closeStudentForm = () => $('modalStudentForm').classList.add('hidden');
+    window.handleSaveStudent = async e => {
+      e.preventDefault();
+      const nisn = editingNisn || $('sfNisn').value.trim(), pw = $('sfPassword').value;
+      const f = { name: $('sfNama').value.trim(), class: $('sfKelas').value.trim(), sekolah: $('sfSekolah').value.trim(), wa: normWa($('sfWa').value) };
+      if (!/^[A-Za-z0-9]{3,20}$/.test(nisn)) return alert('NISN hanya huruf/angka (3-20 karakter).');
+      if (!f.name || !f.class || !f.sekolah || f.wa.length < 8) return alert('Lengkapi semua data dengan benar.');
+      if ((!editingNisn || pw) && pw.length < 6) return alert('Password minimal 6 karakter.');
       try {
-        if (ok) { if (!IS_PREVIEW) await updateDoc(doc(db, 'users', nisn), { verified: true }); state.students.find(s => s.nisn === nisn).verified = true; }
-        else { if (!confirm('Tolak dan hapus pendaftaran ini?')) return; if (!IS_PREVIEW) await deleteDoc(doc(db, 'users', nisn)); state.students = state.students.filter(s => s.nisn !== nisn); }
-        renderVerifikasi(); renderReport();
-      } catch (e) { console.error(e); alert('Aksi gagal.'); }
+        if (pw) { f.salt = crypto.randomUUID(); f.pwHash = await hashPw(pw, f.salt); }
+        if (editingNisn) { if (!IS_PREVIEW) await updateDoc(doc(db, 'users', nisn), f); Object.assign(state.students.find(s => s.nisn === nisn), f); }
+        else {
+          if (await fetchStudent(nisn)) return alert('NISN sudah terdaftar.');
+          const rec = { nisn, ...f, verified: true };
+          if (!IS_PREVIEW) await setDoc(doc(db, 'users', nisn), { ...rec, createdAt: serverTimestamp() });
+          state.students.push(rec);
+        }
+        closeStudentForm(); renderVerifikasi(); renderReport(); toast('Data siswa disimpan.');
+      } catch (err) { console.error(err); alert('Gagal menyimpan data siswa.'); }
+    };
+    window.deleteAttendance = async id => {
+      if (!confirm('Hapus catatan presensi ini?')) return;
+      try { if (!IS_PREVIEW) await deleteDoc(doc(db, 'attendances', id)); state.attendances = state.attendances.filter(a => a.id !== id); renderScannerTable(); renderReport(); } catch (e) { console.error(e); alert('Gagal menghapus.'); }
     };
 
+    // ===== CRUD MATERI =====
     function renderAdminCourses() {
       $('adminCourseListGrid').innerHTML = state.courses.length ? state.courses.map(c => `<div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-soft space-y-2">
         <h5 class="font-extrabold text-slate-800 text-sm">${esc(c.title)}</h5><p class="text-xs text-slate-400">${esc(c.tutor)} • ${esc(c.category)} • ${(c.quiz || []).length} soal</p>
-        <button onclick="deleteCourse('${esc(c.id)}')" class="text-xs text-rose-600 font-bold"><i class="fa-solid fa-trash mr-1"></i> Hapus</button></div>`).join('') : `<p class="text-sm text-slate-400">Belum ada materi. Klik "+ Tambah Materi".</p>`;
+        <div class="flex gap-4 text-xs font-bold"><button onclick="openCourseForm('${esc(c.id)}')" class="text-brand-600"><i class="fa-solid fa-pen mr-1"></i> Edit</button><button onclick="deleteCourse('${esc(c.id)}')" class="text-rose-600"><i class="fa-solid fa-trash mr-1"></i> Hapus</button></div></div>`).join('') : `<p class="text-sm text-slate-400">Belum ada materi. Klik "+ Tambah Materi".</p>`;
     }
+    window.openModalCreateCourse = () => openCourseForm(null);
+    window.openCourseForm = id => {
+      editingCourse = id; const c = id ? state.courses.find(x => x.id === id) : null;
+      $('courseModalTitle').textContent = c ? 'Edit Materi' : 'Tambah Materi Baru'; $('courseSubmitBtn').textContent = c ? 'Simpan Perubahan' : 'Posting Materi';
+      $('inputCourseTitle').value = c?.title || ''; $('inputCourseCategory').value = c?.category || 'Art'; $('inputCourseTutor').value = c?.tutor || '';
+      $('inputCourseYoutube').value = c?.youtubeUrl || ''; $('inputCoursePdf').value = c?.pdfUrl || ''; $('inputCourseDesc').value = c?.desc || '';
+      $('modalCreateCourse').classList.remove('hidden');
+    };
     window.handleSaveCourse = async e => {
       e.preventDefault();
-      const url = $('inputCourseYoutube').value.trim(); if (!okYoutube(url)) return alert('URL harus berformat https://www.youtube.com/embed/XXXX');
-      const c = { id: `c-${Date.now()}`, title: $('inputCourseTitle').value.trim(), category: $('inputCourseCategory').value, tutor: $('inputCourseTutor').value.trim(), rating: 5, youtubeUrl: url, desc: $('inputCourseDesc').value.trim(), isQuizPublic: false, quiz: [] };
-      try { await saveCourse(c); state.courses.push(c); e.target.reset(); closeModalCreateCourse(); renderAdminView(); toast('Materi diposting.'); } catch (err) { console.error(err); alert('Gagal menyimpan materi.'); }
+      const url = $('inputCourseYoutube').value.trim(), pdf = $('inputCoursePdf').value.trim();
+      if (!okYoutube(url)) return alert('URL harus berformat https://www.youtube.com/embed/XXXX');
+      if (pdf && !/^https?:\/\//.test(pdf)) return alert('Link PDF harus diawali http(s)://');
+      const f = { title: $('inputCourseTitle').value.trim(), category: $('inputCourseCategory').value, tutor: $('inputCourseTutor').value.trim(), youtubeUrl: url, pdfUrl: pdf, desc: $('inputCourseDesc').value.trim() };
+      const old = state.courses.find(c => c.id === editingCourse), c = old ? { ...old, ...f } : { id: `c-${Date.now()}`, rating: 5, isQuizPublic: false, quiz: [], ...f };
+      try { await saveCourse(c); if (old) Object.assign(old, c); else state.courses.push(c); closeModalCreateCourse(); renderAdminView(); toast('Materi disimpan.'); } catch (err) { console.error(err); alert(err.message.startsWith('Ukuran') ? err.message : 'Gagal menyimpan materi.'); }
     };
     window.deleteCourse = async id => {
       if (!confirm('Hapus materi ini beserta quiz-nya?')) return;
       try { if (!IS_PREVIEW) await deleteDoc(doc(db, 'courses', id)); state.courses = state.courses.filter(c => c.id !== id); renderAdminView(); } catch (e) { console.error(e); alert('Gagal menghapus.'); }
     };
 
+    // ===== CRUD QUIZ + EDITOR TEKS KAYA =====
+    window.fmt = cmd => { $('quizQuestionEditor').focus(); document.execCommand(cmd, false, null); };
+    const compressImg = (file, max = 480, q = 0.65) => new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => { const i = new Image(); i.onload = () => { const k = Math.min(1, max / i.width), c = document.createElement('canvas'); c.width = Math.round(i.width * k); c.height = Math.round(i.height * k); c.getContext('2d').drawImage(i, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', q)); }; i.onerror = rej; i.src = r.result; };
+      r.onerror = rej; r.readAsDataURL(file);
+    });
+    window.insertQuizImage = async inp => {
+      const f = inp.files[0]; inp.value = ''; if (!f || !f.type.startsWith('image/')) return;
+      try { const url = await compressImg(f); $('quizQuestionEditor').focus(); document.execCommand('insertImage', false, url); } catch (e) { alert('Gambar tidak dapat dibaca.'); }
+    };
     function renderAdminQuizBank() {
-      $('quizTargetCourseSelect').innerHTML = state.courses.map(c => `<option value="${esc(c.id)}">${esc(c.title)}</option>`).join('');
+      const sel = $('quizTargetCourseSelect'), keep = sel.value;
+      sel.innerHTML = state.courses.map(c => `<option value="${esc(c.id)}">${esc(c.title)}</option>`).join(''); if (keep) sel.value = keep;
       $('quizBankListContainer').innerHTML = state.courses.length ? state.courses.map(c => `<div class="p-4 bg-slate-50 border rounded-2xl space-y-3">
-        <div class="flex items-center justify-between border-b pb-2"><h5 class="font-extrabold text-slate-800 text-sm">${esc(c.title)}</h5>
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-2"><h5 class="font-extrabold text-slate-800 text-sm">${esc(c.title)}</h5>
           <button onclick="toggleQuizVisibility('${esc(c.id)}')" class="px-3 py-1 rounded-full text-[10px] font-bold ${c.isQuizPublic ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}"><i class="fa-solid ${c.isQuizPublic ? 'fa-globe' : 'fa-lock'} mr-1"></i> ${c.isQuizPublic ? 'Publik (Bisa Dimainkan Guest)' : 'Private (Siswa Login)'}</button></div>
-        <div class="space-y-2">${!(c.quiz || []).length ? '<p class="text-[11px] text-slate-400">Belum ada soal quiz.</p>' : c.quiz.map((q, i) => `<div class="p-3 bg-white border rounded-xl flex justify-between text-xs"><p class="font-bold text-slate-800">${i + 1}. ${esc(q.question)}</p>
-          <button onclick="deleteQuizQuestion('${esc(c.id)}',${i})" class="text-rose-600"><i class="fa-solid fa-trash"></i></button></div>`).join('')}</div></div>`).join('') : '<p class="text-sm text-slate-400">Tambahkan materi terlebih dahulu.</p>';
+        <div class="space-y-2">${!(c.quiz || []).length ? '<p class="text-[11px] text-slate-400">Belum ada soal quiz.</p>' : c.quiz.map((q, i) => `<div class="p-3 bg-white border rounded-xl flex justify-between gap-3 text-xs"><div class="rich min-w-0 max-h-32 overflow-hidden font-semibold text-slate-800">${i + 1}. ${sanitize(q.question)}</div>
+          <div class="flex gap-3 flex-shrink-0"><button onclick="editQuizQuestion('${esc(c.id)}',${i})" class="text-brand-600"><i class="fa-solid fa-pen"></i></button><button onclick="deleteQuizQuestion('${esc(c.id)}',${i})" class="text-rose-600"><i class="fa-solid fa-trash"></i></button></div></div>`).join('')}</div></div>`).join('') : '<p class="text-sm text-slate-400">Tambahkan materi terlebih dahulu.</p>';
     }
     window.toggleQuizVisibility = async id => {
       const c = state.courses.find(x => x.id === id); if (!c) return;
       try { c.isQuizPublic = !c.isQuizPublic; await saveCourse(c); renderAdminQuizBank(); } catch (e) { c.isQuizPublic = !c.isQuizPublic; console.error(e); alert('Gagal menyimpan.'); }
     };
+    function resetQuizForm() {
+      editingQuiz = null; $('quizQuestionEditor').innerHTML = ''; ['A', 'B', 'C', 'D'].forEach(k => $(`quizOption${k}`).value = ''); $('quizCorrectAnswerSelect').value = '0';
+      $('quizFormTitle').textContent = 'Buat Soal Quiz Baru'; $('quizSubmitBtn').textContent = 'Simpan Soal Quiz'; $('quizCancelBtn').classList.add('hidden'); $('quizTargetCourseSelect').disabled = false;
+    }
+    window.cancelQuizEdit = resetQuizForm;
+    window.editQuizQuestion = (cid, i) => {
+      const q = state.courses.find(c => c.id === cid)?.quiz[i]; if (!q) return;
+      editingQuiz = { cid, i }; $('quizTargetCourseSelect').value = cid; $('quizTargetCourseSelect').disabled = true;
+      $('quizQuestionEditor').innerHTML = sanitize(q.question); ['A', 'B', 'C', 'D'].forEach((k, n) => $(`quizOption${k}`).value = q.options[n] || ''); $('quizCorrectAnswerSelect').value = String(q.answer);
+      $('quizFormTitle').textContent = 'Edit Soal Quiz'; $('quizSubmitBtn').textContent = 'Perbarui Soal'; $('quizCancelBtn').classList.remove('hidden'); $('quizFormTitle').scrollIntoView({ behavior: 'smooth' });
+    };
     window.handleSaveQuizQuestion = async e => {
       e.preventDefault();
-      const c = state.courses.find(x => x.id === $('quizTargetCourseSelect').value); if (!c) return alert('Pilih materi terlebih dahulu.');
+      const ed = $('quizQuestionEditor'), html = sanitize(ed.innerHTML);
+      if (!ed.textContent.trim() && !ed.querySelector('img')) return alert('Pertanyaan tidak boleh kosong.');
+      const c = state.courses.find(x => x.id === (editingQuiz?.cid || $('quizTargetCourseSelect').value)); if (!c) return alert('Pilih materi terlebih dahulu.');
       c.quiz = c.quiz || [];
-      c.quiz.push({ question: $('quizQuestionInput').value.trim(), options: ['A', 'B', 'C', 'D'].map(k => $(`quizOption${k}`).value.trim()), answer: Number($('quizCorrectAnswerSelect').value) });
-      try { await saveCourse(c); e.target.reset(); renderAdminView(); toast('Soal disimpan.'); } catch (err) { c.quiz.pop(); console.error(err); alert('Gagal menyimpan soal.'); }
+      const item = { question: html, options: ['A', 'B', 'C', 'D'].map(k => $(`quizOption${k}`).value.trim()), answer: Number($('quizCorrectAnswerSelect').value) };
+      const prev = editingQuiz ? c.quiz[editingQuiz.i] : null;
+      if (editingQuiz) c.quiz[editingQuiz.i] = item; else c.quiz.push(item);
+      try { await saveCourse(c); resetQuizForm(); renderAdminView(); toast('Soal disimpan.'); }
+      catch (err) { if (prev) c.quiz[editingQuiz.i] = prev; else c.quiz.pop(); console.error(err); alert(err.message.startsWith('Ukuran') ? err.message : 'Gagal menyimpan soal.'); }
     };
     window.deleteQuizQuestion = async (id, idx) => {
+      if (!confirm('Hapus soal ini?')) return;
       const c = state.courses.find(x => x.id === id); if (!c) return; const [removed] = c.quiz.splice(idx, 1);
-      try { await saveCourse(c); renderAdminView(); } catch (e) { c.quiz.splice(idx, 0, removed); console.error(e); alert('Gagal menghapus soal.'); }
+      try { await saveCourse(c); resetQuizForm(); renderAdminView(); } catch (e) { c.quiz.splice(idx, 0, removed); console.error(e); alert('Gagal menghapus soal.'); }
     };
 
     const reportRows = () => state.students.filter(s => s.verified).map(s => ({ NIS: s.nisn, 'Nama Siswa': s.name, Kelas: s.class, Presensi: state.attendances.filter(a => a.studentId === s.nisn).length, 'XP Poin': xpOf(s.nisn) }));
@@ -927,7 +1031,7 @@
     // ===== MODAL & PWA =====
     const modal = (id, show) => () => $(id).classList.toggle('hidden', !show);
     window.openModalRegisterSiswa = modal('modalRegisterSiswa', true); window.closeModalRegisterSiswa = modal('modalRegisterSiswa', false);
-    window.openModalCreateCourse = modal('modalCreateCourse', true); window.closeModalCreateCourse = modal('modalCreateCourse', false);
+    window.closeModalCreateCourse = modal('modalCreateCourse', false);
     window.openMobileMoreMenu = modal('modalMobileMoreMenu', true); window.closeMobileMoreMenu = modal('modalMobileMoreMenu', false);
 
     function registerServiceWorker() {
