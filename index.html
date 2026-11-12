@@ -532,16 +532,17 @@
     import { getFirestore, collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // KONFIGURASI APLIKASI
-    const IS_PREVIEW = true; // Ubah menjadi false SAAT DEPLOY agar terhubung murni ke Firebase tanpa data dummy
+    const IS_PREVIEW = false; // Ubah menjadi false SAAT DEPLOY agar terhubung murni ke Firebase tanpa data dummy
 
     // PASTE FIREBASE CONFIG ANDA DI SINI
     const firebaseConfig = {
-      apiKey: "API_KEY_ANDA",
-      authDomain: "PROJECT_ID.firebaseapp.com",
-      projectId: "PROJECT_ID",
-      storageBucket: "PROJECT_ID.appspot.com",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
+     apiKey: "AIzaSyAY2FONZxvNWzGDDP3X4AYLss2Cvy784KE",
+    authDomain: "diajar-a1eeb.firebaseapp.com",
+    projectId: "diajar-a1eeb",
+    storageBucket: "diajar-a1eeb.firebasestorage.app",
+    messagingSenderId: "346385828111",
+    appId: "1:346385828111:web:3b7a180fbfa8d66033d67a"
+
     };
 
     let auth, db;
