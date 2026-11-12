@@ -878,11 +878,7 @@
       const u = state.currentUser, nav = $('mobileNav');
       const it = (ic, lb, fn, on) => `<button onclick="${fn}" class="flex-1 min-w-0 flex flex-col items-center gap-0.5 py-2 ${on ? 'text-brand-600' : 'text-slate-400'}"><i class="fa-solid ${ic} text-lg"></i><span class="text-[10px] font-semibold leading-none truncate">${lb}</span></button>`;
       if (!u) nav.innerHTML = it('fa-house', 'Beranda', "navigateTo('landing')", curPage === 'landing') + it('fa-magnifying-glass', 'Cari', "navigateTo('landing');document.getElementById('mobileSearchInput').focus()", false) + it('fa-right-to-bracket', 'Masuk', "navigateTo('login')", curPage === 'login');
-      else if (u.role === 'siswa') nav.innerHTML = it('fa-house', 'Beranda', "navigateTo('landing')", curPage === 'landing') + it('fa-book-bookmark', 'Materi', 'openModalMateriList()', false)
-        + `<button onclick="openModalQrSiswa()" class="flex-1 flex flex-col items-center gap-0.5 pb-2"><div class="w-12 h-12 -mt-5 rounded-full bg-brand-600 text-white flex items-center justify-center shadow-lg ring-4 ring-white"><i class="fa-solid fa-qrcode text-lg"></i></div><span class="text-[10px] font-semibold text-brand-600 leading-none">Presensi</span></button>`
-        + it('fa-bars', 'Menu', 'openMobileMoreMenu()', false);
-      else nav.innerHTML = [['scanner', 'fa-qrcode', 'Scan'], ['verifikasi', 'fa-user-check', 'Siswa'], ['materi', 'fa-folder-open', 'Materi'], ['quiz', 'fa-gamepad', 'Quiz'], ['laporan', 'fa-file-invoice', 'Laporan']]
-        .map(([t, ic, lb]) => it(ic, lb, `navigateTo('admin');switchAdminTab('${t}')`, curPage === 'admin' && adminTab === t)).join('');
+      else nav.innerHTML = it('fa-house', 'Beranda', "navigateTo('landing')", curPage === 'landing') + it('fa-table-cells-large', 'Menu', 'openMobileMoreMenu()', false) + it('fa-user', 'Profile', 'openMobileProfile()', false);
     }
 
     // ===== CRUD SISWA =====
@@ -1034,7 +1030,32 @@
     const modal = (id, show) => () => $(id).classList.toggle('hidden', !show);
     window.openModalRegisterSiswa = modal('modalRegisterSiswa', true); window.closeModalRegisterSiswa = modal('modalRegisterSiswa', false);
     window.closeModalCreateCourse = modal('modalCreateCourse', false);
-    window.openMobileMoreMenu = modal('modalMobileMoreMenu', true); window.closeMobileMoreMenu = modal('modalMobileMoreMenu', false);
+    function openSheet(title, body) {
+      let m = $('mobileSheet');
+      if (!m) {
+        m = document.createElement('div'); m.id = 'mobileSheet'; m.className = 'fixed inset-0 z-50 hidden md:hidden';
+        m.innerHTML = `<div class="absolute inset-0 bg-slate-900/50" onclick="closeMobileSheet()"></div><div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-5 max-h-[80vh] overflow-y-auto" style="padding-bottom:max(1.25rem,env(safe-area-inset-bottom))"><div class="flex justify-between items-center mb-4"><h4 id="mobileSheetTitle" class="font-extrabold text-slate-800"></h4><button onclick="closeMobileSheet()" class="text-slate-400 p-1"><i class="fa-solid fa-xmark"></i></button></div><div id="mobileSheetBody"></div></div>`;
+        document.body.appendChild(m);
+      }
+      $('mobileSheetTitle').textContent = title; $('mobileSheetBody').innerHTML = body; m.classList.remove('hidden');
+    }
+    window.closeMobileSheet = () => $('mobileSheet')?.classList.add('hidden');
+    window.goAdmin = async t => { if (curPage !== 'admin') await navigateTo('admin'); switchAdminTab(t); };
+    window.openMobileMoreMenu = () => {
+      const u = state.currentUser; if (!u) return;
+      const card = (ic, lb, fn) => `<button onclick="closeMobileSheet();${fn}" class="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center gap-2 text-center active:bg-brand-50"><i class="fa-solid ${ic} text-brand-600 text-lg"></i><span class="text-xs font-bold text-slate-700">${lb}</span></button>`;
+      const items = u.role === 'siswa'
+        ? [['fa-graduation-cap', 'Dashboard Saya', "navigateTo('siswa')"], ['fa-book-bookmark', 'Materi', 'openModalMateriList()'], ['fa-qrcode', 'QR Presensi', 'openModalQrSiswa()'], ['fa-person-praying', 'Absen Sholat Duha', "markIbadahMandiri('duha')"], ['fa-mosque', 'Absen Sholat Dzuhur', "markIbadahMandiri('dzuhur')"]]
+        : [['fa-qrcode', 'Scan Presensi', "goAdmin('scanner')"], ['fa-user-check', 'Data Siswa', "goAdmin('verifikasi')"], ['fa-folder-open', 'Materi', "goAdmin('materi')"], ['fa-gamepad', 'Bank Soal Quiz', "goAdmin('quiz')"], ['fa-file-invoice', 'Laporan', "goAdmin('laporan')"]];
+      openSheet('Menu', `<div class="grid grid-cols-2 gap-3">${items.map(i => card(...i)).join('')}</div>`);
+    };
+    window.openMobileProfile = () => {
+      const u = state.currentUser; if (!u) return;
+      const rows = u.role === 'siswa' ? [['NISN', u.nisn], ['Kelas', u.class], ['Sekolah', u.sekolah], ['Level', `Lvl ${levelOf(xpOf(u.nisn))} • ${xpOf(u.nisn)} XP`]] : [['Peran', 'Guru / Admin']];
+      openSheet('Profile', `<div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 rounded-2xl bg-slate-900 text-white font-bold flex items-center justify-center text-lg">${esc(u.name.charAt(0))}</div><div class="min-w-0"><h5 class="font-extrabold text-slate-800 truncate">${esc(u.name)}</h5><p class="text-xs text-slate-400">${u.role === 'siswa' ? 'Siswa' : 'Admin'}</p></div></div>
+        <div class="divide-y divide-slate-100 text-xs mb-4">${rows.map(([k, v]) => `<div class="flex justify-between py-2.5"><span class="text-slate-400">${k}</span><span class="font-semibold text-slate-700 text-right">${esc(v)}</span></div>`).join('')}</div>
+        <button onclick="closeMobileSheet();handleLogout()" class="w-full py-3 bg-rose-600 text-white font-bold rounded-xl text-xs"><i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Keluar</button>`);
+    };
 
     function registerServiceWorker() {
       if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
